@@ -5,28 +5,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Gubae</title>
 <style>
-  :root { color-scheme: light dark; }
-  body {
-    margin: 0; padding: 48px 20px; font-family: system-ui, sans-serif;
-    background: #f8f7fb; color: #181b33; line-height: 1.6;
-  }
-  main { max-width: 640px; margin: 0 auto; }
-  h1 { font-size: 2rem; margin: 0 0 8px; }
-  p { color: #625e73; }
-  a { display: block; margin-top: 16px; color: #3b2e7e; font-weight: 600; }
-  @media (prefers-color-scheme: dark) {
-    body { background: #100b1e; color: #fff; }
-    p { color: #cdc8e0; }
-    a { color: #e0a458; }
-  }
+:root { color-scheme: light dark; --ink:#181b33; --muted:#3c3850; --bg:#f8f7fb;
+        --line:#ddd9ea; --brand:#3b2e7e; }
+@media (prefers-color-scheme: dark) {
+  :root { --ink:#fff; --muted:#cdc8e0; --bg:#100b1e; --line:#2a2340; --brand:#e0a458; }
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); line-height:1.65;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+header.hero { position:relative; overflow:hidden; padding:72px 20px 64px;
+  background:linear-gradient(140deg,#2b1f4a 0%,#191130 55%,#100b1e 100%); }
+header.hero::before { content:""; position:absolute; inset:-40% -20% auto -20%;
+  height:150%; border-radius:50%; border:1px solid rgba(224,164,88,.22); }
+.hero-inner { position:relative; max-width:720px; margin:0 auto; }
+.hero img { height:64px; display:block; }
+.hero p { margin:16px 0 0; color:#cdc8e0; }
+main { max-width:720px; margin:0 auto; padding:34px 20px 80px; }
+a.card { display:block; padding:18px 20px; margin-bottom:12px; border-radius:16px;
+  border:1px solid var(--line); color:var(--ink); text-decoration:none; font-weight:600; }
+a.card span { display:block; font-weight:400; color:var(--muted); font-size:.95rem; }
 </style>
 </head>
 <body>
-  <main>
-    <h1>Gubae</h1>
-    <p>Word, Melody, Community. The Bible, the songs and your church life, in Amharic and English.</p>
-    <a href="privacy.html">Privacy policy</a>
-    <a href="terms.html">Terms of use</a>
-  </main>
+<header class="hero">
+  <div class="hero-inner">
+    <img src="gubae-wordmark.png" alt="Gubae">
+    <p>Word, Melody, Community. All Here.</p>
+  </div>
+</header>
+<main>
+  <a class="card" href="privacy.html">Privacy policy
+    <span>What Gubae keeps, and what it does not</span></a>
+  <a class="card" href="terms.html">Terms of use
+    <span>What you agree to when you use Gubae</span></a>
+</main>
 </body>
 </html>

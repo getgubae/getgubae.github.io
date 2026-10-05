@@ -4,39 +4,70 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Gubae Terms of Use</title>
+<meta name="description" content="Gubae Terms of Use">
 <style>
-:root { color-scheme: light dark; }
-* { box-sizing: border-box; }
-body {
-  margin: 0; padding: 48px 20px 80px;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  background: #f8f7fb; color: #181b33; line-height: 1.65;
-}
-main { max-width: 720px; margin: 0 auto; }
-h1 { font-size: 2rem; line-height: 1.25; margin: 0 0 4px; }
-h2, h3 { margin: 36px 0 10px; font-size: 1.15rem; line-height: 1.35; }
-p, li { color: #3c3850; }
-ul, ol { padding-left: 22px; }
-li { margin: 6px 0; }
-hr { border: 0; border-top: 1px solid #ddd9ea; margin: 32px 0; }
-em { color: #625e73; font-style: normal; font-size: .95rem; }
-a { color: #3b2e7e; }
-code { background: #ece9f6; padding: 2px 6px; border-radius: 6px; font-size: .95em; }
-.back { display: inline-block; margin-bottom: 28px; font-weight: 600; text-decoration: none; }
+:root { color-scheme: light dark; --ink:#181b33; --muted:#3c3850; --soft:#625e73;
+        --bg:#f8f7fb; --line:#ddd9ea; --brand:#3b2e7e; --gold:#e0a458; --chip:#ece9f6; }
 @media (prefers-color-scheme: dark) {
-  body { background: #100b1e; color: #fff; }
-  p, li { color: #cdc8e0; }
-  em { color: #a9a3c2; }
-  a { color: #e0a458; }
-  hr { border-top-color: #2a2340; }
-  code { background: #221a3a; }
+  :root { --ink:#fff; --muted:#cdc8e0; --soft:#a9a3c2; --bg:#100b1e;
+          --line:#2a2340; --brand:#e0a458; --chip:#221a3a; }
 }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); line-height:1.65;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+
+/* The banner: the brand's own ground, the engraved arc from the membership
+   card, and the lockup. Nothing is typed as text here; the name is the
+   drawn wordmark, as it is everywhere in the app. */
+header.hero { position:relative; overflow:hidden; padding:54px 20px 44px;
+  background:linear-gradient(140deg,#2b1f4a 0%,#191130 55%,#100b1e 100%); }
+header.hero::before { content:""; position:absolute; inset:-40% -20% auto -20%;
+  height:150%; border-radius:50%; border:1px solid rgba(224,164,88,.22); }
+header.hero::after { content:""; position:absolute; inset:-55% -30% auto -30%;
+  height:160%; border-radius:50%; border:1px solid rgba(255,255,255,.05); }
+.hero-inner { position:relative; max-width:720px; margin:0 auto; }
+.hero img { height:54px; display:block; }
+.hero p { margin:14px 0 0; color:#cdc8e0; font-size:1rem; }
+
+nav.lang { max-width:720px; margin:-22px auto 0; padding:0 20px;
+  position:relative; display:flex; gap:8px; }
+nav.lang button { border:1px solid var(--line); background:var(--bg);
+  color:var(--muted); padding:9px 18px; border-radius:999px; font:inherit;
+  font-weight:600; font-size:.95rem; cursor:pointer; }
+nav.lang button[aria-pressed="true"] { background:var(--brand); border-color:var(--brand);
+  color:#fff; }
+@media (prefers-color-scheme: dark) {
+  nav.lang button[aria-pressed="true"] { color:#1a1330; }
+}
+
+main { max-width:720px; margin:0 auto; padding:28px 20px 80px; }
+h1 { font-size:1.9rem; line-height:1.25; margin:8px 0 4px; }
+h2, h3 { margin:34px 0 10px; font-size:1.12rem; line-height:1.35; }
+p, li { color:var(--muted); }
+ul, ol { padding-left:22px; }
+li { margin:6px 0; }
+hr { border:0; border-top:1px solid var(--line); margin:30px 0; }
+em { color:var(--soft); font-style:normal; font-size:.95rem; }
+a { color:var(--brand); }
+code { background:var(--chip); padding:2px 6px; border-radius:6px; font-size:.95em; }
+section[hidden] { display:none; }
+footer { max-width:720px; margin:0 auto; padding:0 20px 60px; color:var(--soft);
+  font-size:.9rem; }
 </style>
 </head>
 <body>
+<header class="hero">
+  <div class="hero-inner">
+    <a href="index.html"><img src="gubae-wordmark.png" alt="Gubae"></a>
+    <p>Word, Melody, Community. All Here.</p>
+  </div>
+</header>
+<nav class="lang" aria-label="Language">
+  <button type="button" data-lang="en" aria-pressed="true">English</button>
+  <button type="button" data-lang="am" aria-pressed="false">አማርኛ</button>
+</nav>
 <main>
-<a class="back" href="index.html">Gubae</a>
-<h1>Gubae Terms of Use</h1>
+  <section data-lang="en"><h1>Gubae Terms of Use</h1>
 <p><em>Last updated: 4 October 2026</em></p>
 <p>Welcome to Gubae. By downloading, accessing, or using the Gubae application,</p>
 <p>you agree to be bound by these Terms of Use. If you do not agree with any part</p>
@@ -104,9 +135,8 @@ code { background: #ece9f6; padding: 2px 6px; border-radius: 6px; font-size: .95
 <ul>
 <li><strong>Email</strong>: support@getgubae.com</li>
 <li><strong>Web</strong>: <a href="https://getgubae.github.io/terms.html">https://getgubae.github.io/terms.html</a></li>
-</ul>
-<hr>
-<h1>የጉባኤ የአጠቃቀም ውሎች</h1>
+</ul></section>
+  <section data-lang="am" hidden><h1>የጉባኤ የአጠቃቀም ውሎች</h1>
 <p><em>ለመጨረሻ ጊዜ የተሻሻለው፦ መስከረም 24 ቀን 2019 ዓ.ም (October 4, 2026)</em></p>
 <p>እንኳን ወደ ጉባኤ በደህና መጡ። የጉባኤ መተግበሪያን በማውረድ፣ በመጫን ወይም በመጠቀም በእነዚህ የአጠቃቀም ውሎች ለመገዛት ተስማምተዋል። በእነዚህ ውሎች ካልተስማሙ መተግበሪያውን ከመጠቀም እንዲቆጠቡ በአክብሮት እንጠይቃለን።</p>
 <hr>
@@ -167,7 +197,30 @@ code { background: #ece9f6; padding: 2px 6px; border-radius: 6px; font-size: .95
 <ul>
 <li><strong>ኢሜይል</strong>፦ support@getgubae.com</li>
 <li><strong>ድህረ ገጽ</strong>፦ <a href="https://getgubae.github.io/terms.html">https://getgubae.github.io/terms.html</a></li>
-</ul>
+</ul></section>
 </main>
+<footer>Gubae &middot; <a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a></footer>
+<script>
+(function () {
+  var buttons = document.querySelectorAll('nav.lang button');
+  function show(lang) {
+    document.querySelectorAll('section[data-lang]').forEach(function (s) {
+      s.hidden = s.dataset.lang !== lang;
+    });
+    buttons.forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
+    });
+    document.documentElement.lang = lang;
+    try { localStorage.setItem('gubae.lang', lang); } catch (e) {}
+  }
+  var saved = null;
+  try { saved = localStorage.getItem('gubae.lang'); } catch (e) {}
+  // The reader's own language first, their browser's second, English last.
+  show(saved || ((navigator.language || '').slice(0, 2) === 'am' ? 'am' : 'en'));
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () { show(b.dataset.lang); });
+  });
+})();
+</script>
 </body>
 </html>
