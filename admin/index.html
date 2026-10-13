@@ -1,0 +1,681 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Gubae Admin</title>
+<style>
+  :root {
+    --bg: #f6f6fa;
+    --surface: #ffffff;
+    --line: #e2e2ec;
+    --ink: #1b1b2a;
+    --muted: #63637a;
+    --primary: #3b2f8f;
+    --primary-ink: #ffffff;
+    --danger: #b3261e;
+    --ok: #1f7a4d;
+    --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121219; --surface: #1c1c26; --line: #2e2e3c;
+      --ink: #ececf4; --muted: #a0a0b8; --primary: #a99cff;
+      --primary-ink: #16121f; --danger: #ff8a80; --ok: #6ddba2;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121219; --surface: #1c1c26; --line: #2e2e3c;
+    --ink: #ececf4; --muted: #a0a0b8; --primary: #a99cff;
+    --primary-ink: #16121f; --danger: #ff8a80; --ok: #6ddba2;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Ethiopic", sans-serif;
+  }
+  header {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    padding: 14px 16px; border-bottom: 1px solid var(--line);
+    background: var(--surface); position: sticky; top: 0; z-index: 5;
+  }
+  header h1 { font-size: 17px; margin: 0; font-weight: 700; }
+  header .who { color: var(--muted); font-size: 13px; margin-left: auto; }
+  nav { display: flex; gap: 6px; padding: 12px 16px 0; flex-wrap: wrap; }
+  nav button {
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+    padding: 8px 14px; border-radius: 999px; cursor: pointer; font: inherit;
+  }
+  nav button[aria-selected="true"] { background: var(--primary); color: var(--primary-ink); border-color: transparent; }
+  main { padding: 16px; max-width: 1100px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 16px; margin-bottom: 14px;
+  }
+  label { display: block; font-size: 13px; color: var(--muted); margin: 10px 0 4px; }
+  input, select, textarea {
+    width: 100%; padding: 10px 12px; border-radius: 10px;
+    border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: inherit;
+  }
+  textarea { min-height: 150px; resize: vertical; }
+  button.act {
+    padding: 10px 16px; border-radius: 10px; border: none; cursor: pointer;
+    background: var(--primary); color: var(--primary-ink); font: inherit; font-weight: 600;
+  }
+  button.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+  button.danger { background: var(--danger); color: #fff; }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+  @media (max-width: 680px) { .grid2 { grid-template-columns: 1fr; } }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 9px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+  .pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; border: 1px solid var(--line); }
+  .pill.on { color: var(--ok); border-color: currentColor; }
+  .pill.off { color: var(--muted); }
+  .note { color: var(--muted); font-size: 13px; }
+  .msg { padding: 10px 12px; border-radius: 10px; margin: 10px 0; display: none; }
+  .msg.err { display: block; background: color-mix(in srgb, var(--danger) 14%, transparent); color: var(--danger); }
+  .msg.ok { display: block; background: color-mix(in srgb, var(--ok) 14%, transparent); color: var(--ok); }
+  .hide { display: none !important; }
+  img.poster { max-width: 190px; border-radius: 10px; border: 1px solid var(--line); display: block; }
+  .soon { border-left: 3px solid var(--primary); padding-left: 12px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Gubae Admin</h1>
+  <span class="who" id="who"></span>
+  <button class="act ghost hide" id="signout">Sign out</button>
+</header>
+
+<!-- ───────── setup / login ───────── -->
+<main id="gate">
+  <div class="card" id="setupCard">
+    <h2 style="margin-top:0">Connect</h2>
+    <p class="note">
+      Entered once and remembered in this browser. These are the same two values
+      the app is built with, and the key below is the public one, safe to use in
+      a page. Never paste a service key here.
+    </p>
+    <label for="sbUrl">Supabase URL</label>
+    <input id="sbUrl" placeholder="https://xxxx.supabase.co" autocomplete="off">
+    <label for="sbKey">Supabase anon key</label>
+    <input id="sbKey" placeholder="eyJ..." autocomplete="off">
+    <div class="row" style="margin-top:12px">
+      <button class="act" id="saveConn">Save</button>
+    </div>
+  </div>
+
+  <div class="card hide" id="loginCard">
+    <h2 style="margin-top:0">Sign in</h2>
+    <label for="email">Email</label>
+    <input id="email" type="email" autocomplete="username">
+    <label for="password">Password</label>
+    <input id="password" type="password" autocomplete="current-password">
+    <div class="row" style="margin-top:12px">
+      <button class="act" id="login">Sign in</button>
+      <button class="act ghost" id="forget">Change connection</button>
+    </div>
+    <p class="note" style="margin:16px 0 8px">Or, the way you sign in on the phone:</p>
+    <button class="act ghost" id="google" style="width:100%">Sign in with Google</button>
+    <p class="note" id="googleNote" style="margin-top:8px"></p>
+    <div class="msg" id="loginMsg"></div>
+  </div>
+</main>
+
+<!-- ───────── the admin itself ───────── -->
+<div id="app" class="hide">
+  <nav>
+    <button data-tab="events" aria-selected="true">Events</button>
+    <button data-tab="users" aria-selected="false">Users</button>
+    <button data-tab="more" aria-selected="false">Not built yet</button>
+  </nav>
+  <main>
+    <div class="msg" id="appMsg"></div>
+
+    <!-- EVENTS -->
+    <section id="tab-events">
+      <div class="card">
+        <div class="row">
+          <h2 style="margin:0;flex:1">Events</h2>
+          <button class="act" id="newEvent">New event</button>
+          <button class="act ghost" id="reloadEvents">Reload</button>
+        </div>
+      </div>
+
+      <div class="card hide" id="eventForm">
+        <h3 style="margin-top:0" id="eventFormTitle">New event</h3>
+        <input type="hidden" id="ev_id">
+        <label for="ev_title">Title</label>
+        <input id="ev_title">
+        <div class="grid2">
+          <div>
+            <label for="ev_type">Type</label>
+            <select id="ev_type">
+              <option value="conference">Conference</option>
+              <option value="concert">Concert</option>
+              <option value="youthMeeting">Youth meeting</option>
+              <option value="choir">Choir</option>
+              <option value="worshipNight">Worship night</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label for="ev_date">Date and time</label>
+            <input id="ev_date" type="datetime-local">
+          </div>
+        </div>
+        <div class="grid2">
+          <div>
+            <label for="ev_org">Organizer</label>
+            <input id="ev_org">
+          </div>
+          <div>
+            <label for="ev_speaker">Speaker</label>
+            <input id="ev_speaker">
+          </div>
+        </div>
+        <label for="ev_loc">Location</label>
+        <input id="ev_loc">
+        <label for="ev_desc">Description</label>
+        <textarea id="ev_desc"></textarea>
+        <div class="grid2">
+          <div>
+            <label for="ev_link">Link (tickets or registration)</label>
+            <input id="ev_link" placeholder="optional">
+          </div>
+          <div>
+            <label for="ev_video">Promo video URL</label>
+            <input id="ev_video" placeholder="optional">
+          </div>
+        </div>
+        <label for="ev_poster">Poster</label>
+        <input id="ev_poster" type="file" accept="image/*">
+        <p class="note" id="ev_posterNote">No poster chosen.</p>
+        <img class="poster hide" id="ev_posterPreview" alt="">
+        <label class="row" style="margin-top:12px">
+          <input type="checkbox" id="ev_published" style="width:auto">
+          <span style="color:var(--ink)">Published, so readers can see it</span>
+        </label>
+        <div class="row" style="margin-top:14px">
+          <button class="act" id="saveEvent">Save</button>
+          <button class="act ghost" id="cancelEvent">Cancel</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <table>
+          <thead><tr><th>Title</th><th>When</th><th>Where</th><th>Status</th><th></th></tr></thead>
+          <tbody id="eventRows"><tr><td colspan="5" class="note">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- USERS -->
+    <section id="tab-users" class="hide">
+      <div class="card">
+        <div class="row">
+          <h2 style="margin:0;flex:1">Users</h2>
+          <input id="userSearch" placeholder="Search name or email" style="max-width:260px">
+          <button class="act ghost" id="reloadUsers">Reload</button>
+        </div>
+        <p class="note" style="margin-bottom:0">
+          Making somebody an admin is done by the database, not by this page, so
+          the same rules apply here as in the app. It refuses if you are not an
+          admin yourself.
+        </p>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Name</th><th>Email</th><th>Joined</th><th>Admin</th><th></th></tr></thead>
+          <tbody id="userRows"><tr><td colspan="5" class="note">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- NOT BUILT YET -->
+    <section id="tab-more" class="hide">
+      <div class="card">
+        <h2 style="margin-top:0">Not built yet, and why</h2>
+        <p class="note">An honest list, so nothing here looks finished when it is not.</p>
+
+        <div class="soon" style="margin:16px 0">
+          <strong>Lyrics, albums and singers</strong>
+          <p class="note">Works the same way as Events and needs no new backend.
+          It is more screens rather than harder ones, and the catalogue is 2,433
+          songs, so searching and paging have to be right before it is useful.</p>
+        </div>
+        <div class="soon" style="margin:16px 0">
+          <strong>Library articles, notices, submissions and reports</strong>
+          <p class="note">Same again. The admin policies already exist from
+          migration 025, so these are UI work only.</p>
+        </div>
+        <div class="soon" style="margin:16px 0">
+          <strong>Blocking an account</strong>
+          <p class="note"><em>Needs a database change first.</em> There is no
+          "blocked" flag today, and adding one is only half the job: every rule
+          that lets somebody write something has to check it, or a blocked
+          person carries on exactly as before. That is a migration, not a page.</p>
+        </div>
+        <div class="soon" style="margin:16px 0">
+          <strong>Deleting an account and its data</strong>
+          <p class="note"><em>Cannot be done from a browser at all, by design.</em>
+          Removing a sign-in needs a key that must never leave a server. It has
+          to be a small server function, like the one that already sends
+          notices, which checks you are an admin and then does the deletion
+          itself.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const $ = (id) => document.getElementById(id);
+const LS = { url: 'gubae.admin.url', key: 'gubae.admin.key' };
+
+let sb = null;
+let me = null;
+
+/* ── small helpers ─────────────────────────────────────────────── */
+function show(el, on) { el.classList.toggle('hide', !on); }
+function say(el, text, kind) {
+  el.textContent = text;
+  el.className = 'msg ' + (kind || '');
+  if (!text) el.className = 'msg';
+}
+function store(k, v) { try { localStorage.setItem(k, v); } catch (_) {} }
+function read(k) { try { return localStorage.getItem(k) || ''; } catch (_) { return ''; } }
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g,
+    (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function fmtDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return isNaN(d) ? '' : d.toLocaleString(undefined,
+    { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+// A <input type="datetime-local"> wants local time with no zone.
+function toLocalInput(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (isNaN(d)) return '';
+  const p = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+
+/* ── connect and sign in ───────────────────────────────────────── */
+function connect(url, key) {
+  sb = createClient(url, key);
+  watchAuth();
+  show($('setupCard'), false);
+  show($('loginCard'), true);
+}
+
+$('saveConn').onclick = () => {
+  const url = $('sbUrl').value.trim().replace(/\/+$/, '');
+  const key = $('sbKey').value.trim();
+  if (!/^https:\/\/.+\.supabase\.co$/.test(url)) {
+    return alert('That does not look like a Supabase URL.');
+  }
+  if (key.length < 40) return alert('That does not look like an anon key.');
+  // A service key is a JWT whose role is service_role. Refuse it outright:
+  // pasted into a page, it would hand the whole database to any visitor.
+  try {
+    const body = JSON.parse(atob(key.split('.')[1] || ''));
+    if (body && body.role && body.role !== 'anon') {
+      return alert('That is a ' + body.role + ' key. Use the anon key, never a service key.');
+    }
+  } catch (_) { /* not a readable JWT; let Supabase judge it */ }
+  store(LS.url, url); store(LS.key, key);
+  connect(url, key);
+};
+
+$('forget').onclick = () => {
+  store(LS.url, ''); store(LS.key, '');
+  location.reload();
+};
+
+$('login').onclick = async () => {
+  say($('loginMsg'), '');
+  $('login').disabled = true;
+  try {
+    const { error } = await sb.auth.signInWithPassword({
+      email: $('email').value.trim(),
+      password: $('password').value,
+    });
+    if (error) throw error;
+    await afterLogin();
+  } catch (e) {
+    say($('loginMsg'), e.message || String(e), 'err');
+  } finally {
+    $('login').disabled = false;
+  }
+};
+
+/* Google, which is how the owner actually signs in: the account was made
+   through Google and has no password at all. Supabase sends the person to
+   Google and brings them back here with a session already in place, which
+   `start()` and the auth listener below both pick up.
+
+   **It cannot work from a file on your own computer.** Google refuses to
+   return to a `file://` address, so this button is only useful once the page
+   is online, and the exact address has to be listed under Supabase's
+   Authentication URL Configuration or the return trip is rejected. */
+$('google').onclick = async () => {
+  say($('loginMsg'), '');
+  if (location.protocol === 'file:') {
+    return say($('loginMsg'),
+      'Google cannot sign you in to a page opened from your own computer. '
+      + 'Use the email and password above, or open the published address.', 'err');
+  }
+  // Back to this page with no stale #fragment on the end.
+  const redirectTo = location.origin + location.pathname;
+  const { error } = await sb.auth.signInWithOAuth({
+    provider: 'google', options: { redirectTo },
+  });
+  if (error) say($('loginMsg'), error.message, 'err');
+};
+
+$('signout').onclick = async () => { await sb.auth.signOut(); location.reload(); };
+
+/* Returning from Google lands here rather than on a button press. Guarded,
+   because this fires on token refreshes too and `afterLogin` would otherwise
+   run again every hour. */
+let settling = false;
+function watchAuth() {
+  sb.auth.onAuthStateChange((event, session) => {
+    if (event !== 'SIGNED_IN' || !session || me || settling) return;
+    settling = true;
+    afterLogin().finally(() => { settling = false; });
+  });
+}
+
+async function afterLogin() {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+  // **Authority is the database's, not this page's.** Hiding buttons from a
+  // non-admin is courtesy; the policies are what actually refuse the write.
+  const { data, error } = await sb
+    .from('profiles').select('is_admin, display_name').eq('user_id', user.id).maybeSingle();
+  if (error) { say($('loginMsg'), error.message, 'err'); return; }
+  if (!data || !data.is_admin) {
+    await sb.auth.signOut();
+    say($('loginMsg'), 'That account is not an admin.', 'err');
+    return;
+  }
+  me = { id: user.id, email: user.email, name: data.display_name };
+  $('who').textContent = me.email;
+  show($('signout'), true);
+  show($('gate'), false);
+  show($('app'), true);
+  loadEvents();
+}
+
+/* ── tabs ──────────────────────────────────────────────────────── */
+document.querySelectorAll('nav button').forEach((b) => {
+  b.onclick = () => {
+    document.querySelectorAll('nav button').forEach((o) => o.setAttribute('aria-selected', String(o === b)));
+    ['events', 'users', 'more'].forEach((t) => show($('tab-' + t), t === b.dataset.tab));
+    if (b.dataset.tab === 'users') loadUsers();
+    if (b.dataset.tab === 'events') loadEvents();
+  };
+});
+
+/* ── events ────────────────────────────────────────────────────── */
+let posterFile = null;
+
+$('ev_poster').onchange = (e) => {
+  posterFile = e.target.files[0] || null;
+  $('ev_posterNote').textContent = posterFile
+    ? `${posterFile.name}, ${(posterFile.size / 1024 / 1024).toFixed(1)} MB`
+    : 'No poster chosen.';
+};
+
+function blankEventForm() {
+  ['ev_id','ev_title','ev_org','ev_speaker','ev_loc','ev_desc','ev_link','ev_video','ev_date']
+    .forEach((f) => { $(f).value = ''; });
+  $('ev_type').value = 'conference';
+  $('ev_published').checked = false;
+  posterFile = null;
+  $('ev_poster').value = '';
+  $('ev_posterNote').textContent = 'No poster chosen.';
+  show($('ev_posterPreview'), false);
+}
+
+$('newEvent').onclick = () => {
+  blankEventForm();
+  $('eventFormTitle').textContent = 'New event';
+  show($('eventForm'), true);
+  $('ev_title').focus();
+};
+$('cancelEvent').onclick = () => show($('eventForm'), false);
+$('reloadEvents').onclick = () => loadEvents();
+
+async function loadEvents() {
+  const tb = $('eventRows');
+  tb.innerHTML = '<tr><td colspan="5" class="note">Loading...</td></tr>';
+  const { data, error } = await sb.from('events')
+    .select('*').eq('is_deleted', false).order('event_date', { ascending: false }).limit(200);
+  if (error) { tb.innerHTML = `<tr><td colspan="5" class="note">${esc(error.message)}</td></tr>`; return; }
+  if (!data.length) { tb.innerHTML = '<tr><td colspan="5" class="note">No events yet.</td></tr>'; return; }
+  tb.innerHTML = data.map((e) => `
+    <tr>
+      <td><strong>${esc(e.title)}</strong><br><span class="note">${esc(e.organizer || '')}</span></td>
+      <td>${esc(fmtDate(e.event_date))}</td>
+      <td>${esc(e.location || '')}</td>
+      <td><span class="pill ${e.is_published ? 'on' : 'off'}">${e.is_published ? 'Published' : 'Draft'}</span></td>
+      <td class="row">
+        <button class="act ghost" data-edit="${esc(e.id)}">Edit</button>
+        <button class="act ghost" data-pub="${esc(e.id)}">${e.is_published ? 'Unpublish' : 'Publish'}</button>
+        <button class="act danger" data-del="${esc(e.id)}">Remove</button>
+      </td>
+    </tr>`).join('');
+
+  tb.querySelectorAll('[data-edit]').forEach((b) => {
+    b.onclick = () => editEvent(data.find((x) => x.id === b.dataset.edit));
+  });
+  tb.querySelectorAll('[data-pub]').forEach((b) => {
+    b.onclick = () => togglePublish(data.find((x) => x.id === b.dataset.pub));
+  });
+  tb.querySelectorAll('[data-del]').forEach((b) => {
+    b.onclick = () => removeEvent(data.find((x) => x.id === b.dataset.del));
+  });
+}
+
+function editEvent(e) {
+  if (!e) return;
+  blankEventForm();
+  $('eventFormTitle').textContent = 'Edit event';
+  $('ev_id').value = e.id;
+  $('ev_title').value = e.title || '';
+  $('ev_type').value = e.type || 'other';
+  $('ev_date').value = toLocalInput(e.event_date);
+  $('ev_org').value = e.organizer || '';
+  $('ev_speaker').value = e.speaker || '';
+  $('ev_loc').value = e.location || '';
+  $('ev_desc').value = e.description || '';
+  $('ev_link').value = e.link || '';
+  $('ev_video').value = e.promo_video_url || '';
+  $('ev_published').checked = !!e.is_published;
+  const url = e.banner_url || (e.banner_urls && e.banner_urls[0]);
+  if (url) {
+    $('ev_posterPreview').src = url;
+    show($('ev_posterPreview'), true);
+    $('ev_posterNote').textContent = 'Current poster. Choose a file to replace it.';
+  }
+  show($('eventForm'), true);
+  $('eventForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// The bucket's own limits, repeated here so a refusal is a sentence rather
+// than a storage error nobody can act on. From migration 023.
+const POSTER_MAX_BYTES = 2 * 1024 * 1024;
+const POSTER_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+
+async function uploadPoster(file) {
+  if (!POSTER_TYPES.includes(file.type)) {
+    throw new Error('The poster must be a JPG, PNG or WebP. That file is ' + (file.type || 'of an unknown kind') + '.');
+  }
+  if (file.size > POSTER_MAX_BYTES) {
+    throw new Error(`The poster is ${(file.size / 1024 / 1024).toFixed(1)} MB and the limit is 2 MB. Save it smaller and try again.`);
+  }
+  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+  // **The first folder MUST be your own account id.** The bucket's write
+  // policy is `(storage.foldername(name))[1] = auth.uid()`, so a tidier path
+  // like "events/..." is refused outright. Migration 023.
+  const path = `${me.id}/event-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const { error } = await sb.storage.from('submission-images')
+    .upload(path, file, { cacheControl: '3600', upsert: false, contentType: file.type });
+  if (error) throw error;
+  return sb.storage.from('submission-images').getPublicUrl(path).data.publicUrl;
+}
+
+$('saveEvent').onclick = async () => {
+  const btn = $('saveEvent');
+  say($('appMsg'), '');
+  const title = $('ev_title').value.trim();
+  const when = $('ev_date').value;
+  // The three the table refuses to be without. Caught here so the failure is
+  // a sentence rather than a Postgres NOT NULL error.
+  if (!title) return say($('appMsg'), 'The event needs a title.', 'err');
+  if (!when) return say($('appMsg'), 'The event needs a date.', 'err');
+  if (!$('ev_loc').value.trim()) return say($('appMsg'), 'The event needs a location.', 'err');
+  if (!$('ev_org').value.trim()) return say($('appMsg'), 'The event needs an organizer.', 'err');
+
+  btn.disabled = true;
+  try {
+    let posterUrl = null;
+    if (posterFile) {
+      say($('appMsg'), 'Uploading the poster...', 'ok');
+      posterUrl = await uploadPoster(posterFile);
+    }
+    const row = {
+      title,
+      type: $('ev_type').value,
+      event_date: new Date(when).toISOString(),
+      organizer: $('ev_org').value.trim(),
+      speaker: $('ev_speaker').value.trim() || null,
+      location: $('ev_loc').value.trim(),
+      description: $('ev_desc').value.trim() || null,
+      link: $('ev_link').value.trim() || null,
+      promo_video_url: $('ev_video').value.trim() || null,
+      is_published: $('ev_published').checked,
+    };
+    if (posterUrl) { row.banner_url = posterUrl; row.banner_urls = [posterUrl]; }
+
+    const id = $('ev_id').value;
+    const { error } = id
+      ? await sb.from('events').update(row).eq('id', id)
+      : await sb.from('events').insert(row);
+    if (error) throw error;
+
+    say($('appMsg'), id ? 'Saved.' : 'Event created.', 'ok');
+    show($('eventForm'), false);
+    loadEvents();
+  } catch (e) {
+    say($('appMsg'), e.message || String(e), 'err');
+  } finally {
+    btn.disabled = false;
+  }
+};
+
+async function togglePublish(e) {
+  if (!e) return;
+  const { error } = await sb.from('events')
+    .update({ is_published: !e.is_published }).eq('id', e.id);
+  if (error) return say($('appMsg'), error.message, 'err');
+  say($('appMsg'), e.is_published ? 'Unpublished.' : 'Published.', 'ok');
+  loadEvents();
+}
+
+async function removeEvent(e) {
+  if (!e) return;
+  if (!confirm(`Remove "${e.title}"?\n\nIt stops being visible in the app. The row is kept, so this can be undone in the database.`)) return;
+  // Soft delete, like the app does: the sync tells phones to drop it, which a
+  // hard delete cannot, because a deleted row has nothing left to send.
+  const { error } = await sb.from('events')
+    .update({ is_deleted: true, is_published: false }).eq('id', e.id);
+  if (error) return say($('appMsg'), error.message, 'err');
+  say($('appMsg'), 'Removed.', 'ok');
+  loadEvents();
+}
+
+/* ── users ─────────────────────────────────────────────────────── */
+let allUsers = [];
+
+$('reloadUsers').onclick = () => loadUsers();
+$('userSearch').oninput = () => renderUsers();
+
+async function loadUsers() {
+  const tb = $('userRows');
+  tb.innerHTML = '<tr><td colspan="5" class="note">Loading...</td></tr>';
+  const { data, error } = await sb.from('profiles')
+    .select('user_id, email, display_name, is_admin, created_at')
+    .order('created_at', { ascending: false }).limit(1000);
+  if (error) { tb.innerHTML = `<tr><td colspan="5" class="note">${esc(error.message)}</td></tr>`; return; }
+  allUsers = data || [];
+  renderUsers();
+}
+
+function renderUsers() {
+  const q = $('userSearch').value.trim().toLowerCase();
+  const rows = allUsers.filter((u) => !q
+    || (u.email || '').toLowerCase().includes(q)
+    || (u.display_name || '').toLowerCase().includes(q));
+  const tb = $('userRows');
+  if (!rows.length) { tb.innerHTML = '<tr><td colspan="5" class="note">Nobody matches.</td></tr>'; return; }
+  tb.innerHTML = rows.map((u) => {
+    const self = u.user_id === me.id;
+    return `<tr>
+      <td>${esc(u.display_name || '')}${self ? ' <span class="note">(you)</span>' : ''}</td>
+      <td>${esc(u.email || '')}</td>
+      <td>${esc(fmtDate(u.created_at))}</td>
+      <td><span class="pill ${u.is_admin ? 'on' : 'off'}">${u.is_admin ? 'Admin' : 'Reader'}</span></td>
+      <td>${u.email && !self
+        ? `<button class="act ghost" data-admin="${esc(u.email)}" data-to="${u.is_admin ? '0' : '1'}">${u.is_admin ? 'Remove admin' : 'Make admin'}</button>`
+        : '<span class="note">' + (self ? 'Change your own role in the app' : 'No email on file') + '</span>'}</td>
+    </tr>`;
+  }).join('');
+  tb.querySelectorAll('[data-admin]').forEach((b) => {
+    b.onclick = () => setAdmin(b.dataset.admin, b.dataset.to === '1');
+  });
+}
+
+async function setAdmin(email, makeAdmin) {
+  const what = makeAdmin ? 'Make ' + email + ' an admin?' : 'Remove admin from ' + email + '?';
+  if (!confirm(what + '\n\nAn admin can edit and delete all content.')) return;
+  // The database decides. set_gubae_admin refuses a caller who is not an
+  // admin and reports its own reason, so there is nothing to re-check here.
+  const { data, error } = await sb.rpc('set_gubae_admin', {
+    p_email: email, p_is_admin: makeAdmin,
+  });
+  if (error) return say($('appMsg'), error.message, 'err');
+  say($('appMsg'), data || 'Done.', 'ok');
+  loadUsers();
+}
+
+/* ── start ─────────────────────────────────────────────────────── */
+(async function start() {
+  if (location.protocol === 'file:') {
+    $('googleNote').textContent =
+      'Opened from your computer, so Google sign-in cannot work here. It works'
+      + ' once this page is published.';
+  }
+  const url = read(LS.url), key = read(LS.key);
+  if (url && key) {
+    connect(url, key);
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) await afterLogin();
+  }
+})();
+</script>
+</body>
+</html>
