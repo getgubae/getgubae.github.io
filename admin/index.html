@@ -207,6 +207,28 @@
           <input type="checkbox" id="ev_published" style="width:auto">
           <span style="color:var(--ink)">Published, so readers can see it</span>
         </label>
+
+        <hr style="border:none;border-top:1px solid var(--line);margin:18px 0">
+        <label class="row" style="margin:0">
+          <input type="checkbox" id="ev_featured" style="width:auto">
+          <span style="color:var(--ink)"><strong>Feature on the Home slider</strong></span>
+        </label>
+        <p class="note">It leads the Home slider, ahead of the verse of the day, while the dates below last.</p>
+        <div id="ev_featuredWrap" class="hide">
+          <div class="grid2">
+            <div>
+              <label for="ev_featFrom">Featured from</label>
+              <input id="ev_featFrom" type="datetime-local">
+            </div>
+            <div>
+              <label for="ev_featUntil">Featured until</label>
+              <input id="ev_featUntil" type="datetime-local">
+            </div>
+          </div>
+          <label for="ev_featHold">Seconds on screen</label>
+          <input id="ev_featHold" type="number" min="2" max="600" placeholder="6">
+          <p class="note">How long its slide sits before moving on. Leave empty for the usual 6 seconds. Between 2 and 600.</p>
+        </div>
         <div class="row" style="margin-top:14px">
           <button class="act" id="saveEvent">Save</button>
           <button class="act ghost" id="cancelEvent">Cancel</button>
@@ -832,11 +854,17 @@ function blankEventForm() {
     .forEach((f) => { $(f).value = ''; });
   $('ev_type').value = 'conference';
   $('ev_published').checked = false;
+  $('ev_featured').checked = false;
+  ['ev_featFrom','ev_featUntil','ev_featHold'].forEach((f) => $(f).value = '');
+  show($('ev_featuredWrap'), false);
   posterFile = null;
   $('ev_poster').value = '';
   $('ev_posterNote').textContent = 'No poster chosen.';
   show($('ev_posterPreview'), false);
 }
+
+$('ev_featured').onchange = () =>
+  show($('ev_featuredWrap'), $('ev_featured').checked);
 
 $('newEvent').onclick = () => {
   blankEventForm();
@@ -893,6 +921,11 @@ function editEvent(e) {
   $('ev_link').value = e.link || '';
   $('ev_video').value = e.promo_video_url || '';
   $('ev_published').checked = !!e.is_published;
+  $('ev_featured').checked = !!e.is_featured;
+  $('ev_featFrom').value = toLocalInput(e.featured_from);
+  $('ev_featUntil').value = toLocalInput(e.featured_until);
+  $('ev_featHold').value = e.featured_hold_seconds || '';
+  show($('ev_featuredWrap'), !!e.is_featured);
   const url = e.banner_url || (e.banner_urls && e.banner_urls[0]);
   if (url) {
     $('ev_posterPreview').src = url;
@@ -956,6 +989,15 @@ $('saveEvent').onclick = async () => {
       link: $('ev_link').value.trim() || null,
       promo_video_url: $('ev_video').value.trim() || null,
       is_published: $('ev_published').checked,
+      is_featured: $('ev_featured').checked,
+      // Null rather than empty, so 'no limit that side' is stored as
+      // nothing rather than as an unreadable date.
+      featured_from: $('ev_featured').checked && $('ev_featFrom').value
+        ? new Date($('ev_featFrom').value).toISOString() : null,
+      featured_until: $('ev_featured').checked && $('ev_featUntil').value
+        ? new Date($('ev_featUntil').value).toISOString() : null,
+      featured_hold_seconds: $('ev_featured').checked && $('ev_featHold').value
+        ? Number($('ev_featHold').value) : null,
     };
     if (posterUrl) { row.banner_url = posterUrl; row.banner_urls = [posterUrl]; }
 
