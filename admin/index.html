@@ -690,8 +690,28 @@ let me = null;
 
 /* ── small helpers ─────────────────────────────────────────────── */
 function show(el, on) { el.classList.toggle('hide', !on); }
+/// Turns a database complaint into something a person can act on.
+///
+/// Postgres names the rule it enforced, which is exactly right for a log and
+/// useless to the owner standing in front of the form.
+const DB_PLAIN = {
+  valid_featured_window: 'Featured until must be after featured from.',
+  valid_featured_hold: 'Seconds on screen must be between 2 and 600.',
+  valid_event_type: 'That is not one of the event kinds.',
+  valid_interested_count: 'The interested count cannot be negative.',
+};
+function plainError(message) {
+  const text = String(message || '');
+  for (const [name, plain] of Object.entries(DB_PLAIN)) {
+    if (text.includes(name)) return plain;
+  }
+  if (text.includes('duplicate key')) return 'That already exists.';
+  if (text.includes('violates not-null')) return 'Something required was left empty.';
+  return text;
+}
+
 function say(el, text, kind) {
-  el.textContent = text;
+  el.textContent = kind === 'err' ? plainError(text) : text;
   el.className = 'msg ' + (kind || '');
   if (!text) el.className = 'msg';
 }
@@ -863,8 +883,17 @@ function blankEventForm() {
   show($('ev_posterPreview'), false);
 }
 
-$('ev_featured').onchange = () =>
+$('ev_featured').onchange = () => {
   show($('ev_featuredWrap'), $('ev_featured').checked);
+  // **Sensible dates rather than two empty boxes.** Turning it on almost
+  // always means 'from now until the gathering', so that is what it offers;
+  // both stay editable. Two blanks invited the end-before-start mistake.
+  if (!$('ev_featured').checked) return;
+  if (!$('ev_featFrom').value) $('ev_featFrom').value = toLocalInput(new Date().toISOString());
+  if (!$('ev_featUntil').value && $('ev_date').value) {
+    $('ev_featUntil').value = $('ev_date').value;
+  }
+};
 
 $('newEvent').onclick = () => {
   blankEventForm();
@@ -970,6 +999,24 @@ $('saveEvent').onclick = async () => {
   if (!when) return say($('appMsg'), 'The event needs a date.', 'err');
   if (!$('ev_loc').value.trim()) return say($('appMsg'), 'The event needs a location.', 'err');
   if (!$('ev_org').value.trim()) return say($('appMsg'), 'The event needs an organizer.', 'err');
+
+  // **Caught here so the answer is a sentence.** The database refuses an end
+  // before its own beginning, correctly, but it says so as
+  // 'violates check constraint "valid_featured_window"', which tells a
+  // reader nothing about what they did or how to undo it.
+  const featFrom = $('ev_featured').checked ? $('ev_featFrom').value : '';
+  const featUntil = $('ev_featured').checked ? $('ev_featUntil').value : '';
+  if (featFrom && featUntil && new Date(featUntil) <= new Date(featFrom)) {
+    return say($('appMsg'),
+      'Featured until must be AFTER featured from. You have it ending at '
+      + fmtDate(new Date(featUntil).toISOString()) + ', which is before it starts at '
+      + fmtDate(new Date(featFrom).toISOString()) + '.', 'err');
+  }
+  const hold = $('ev_featured').checked ? $('ev_featHold').value : '';
+  if (hold && (Number(hold) < 2 || Number(hold) > 600)) {
+    return say($('appMsg'),
+      'Seconds on screen must be between 2 and 600.', 'err');
+  }
 
   btn.disabled = true;
   try {
