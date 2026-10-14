@@ -1084,28 +1084,134 @@ function editEvent(e) {
   $('eventForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// The bucket's own limits, repeated here so a refusal is a sentence rather
-// than a storage error nobody can act on. From migration 023.
+// **Pictures are shrunk here, in your browser, before they are sent.**
+//
+// A poster off a phone or a designer is often 2 to 8 MB and 3000px wide. It
+// is shown on a phone screen a few hundred points across, so almost all of
+// that is paid for and never seen: once in your upload, and then again by
+// every reader who opens the event, on mobile data they pay for.
+//
+// 1400px is generous. It is wider than any phone and leaves room for a
+// tablet, and it takes a typical poster to a couple of hundred kilobytes.
+const IMAGE_MAX_EDGE = { poster: 1400, portrait: 800 };
+const IMAGE_QUALITY = 0.82;
+
+// The bucket's own limits, from migration 023, repeated so a refusal is a
+// sentence rather than a storage error nobody can act on.
 const POSTER_MAX_BYTES = 2 * 1024 * 1024;
 const POSTER_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
-async function uploadPoster(file) {
+/// Reads the file into something drawable, **keeping which way up it is**.
+///
+/// A photograph from a phone carries its rotation beside the pixels rather
+/// than in them. Draw it to a canvas naively and that instruction is thrown
+/// away, so a poster shot in portrait arrives on its side. `createImageBitmap`
+/// with `imageOrientation: 'from-image'` applies it; the older path below
+/// cannot, which is why it is only a fallback.
+async function decodeImage(file) {
+  if (window.createImageBitmap) {
+    try {
+      return await createImageBitmap(file, { imageOrientation: 'from-image' });
+    } catch (_) { /* fall through */ }
+  }
+  return await new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('That file is not a picture Gubae can read.')); };
+    img.src = url;
+  });
+}
+
+/// Returns a smaller file, or the original when shrinking would not help.
+async function shrinkImage(file, kind) {
+  const maxEdge = IMAGE_MAX_EDGE[kind] || IMAGE_MAX_EDGE.poster;
+  let bitmap;
+  try {
+    bitmap = await decodeImage(file);
+  } catch (e) {
+    // Unreadable here means unreadable in the app too, so say so now.
+    throw e;
+  }
+
+  const w = bitmap.width, h = bitmap.height;
+  const scale = Math.min(1, maxEdge / Math.max(w, h));
+  const outW = Math.max(1, Math.round(w * scale));
+  const outH = Math.max(1, Math.round(h * scale));
+
+  const canvas = document.createElement('canvas');
+  canvas.width = outW; canvas.height = outH;
+  const ctx = canvas.getContext('2d');
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(bitmap, 0, 0, outW, outH);
+  if (bitmap.close) bitmap.close();
+
+  // WebP where the browser has it: it carries transparency AND photographs,
+  // and is markedly smaller than JPEG at the same quality. The bucket allows
+  // it (migration 023). PNG is kept for anything with transparency when WebP
+  // is missing, because flattening a logo onto black is worse than a big file.
+  const wantsAlpha = file.type === 'image/png';
+  let type = 'image/webp';
+  if (!canvas.toDataURL('image/webp').startsWith('data:image/webp')) {
+    type = wantsAlpha ? 'image/png' : 'image/jpeg';
+  }
+
+  const blob = await new Promise((res) => canvas.toBlob(res, type, IMAGE_QUALITY));
+  if (!blob) return { file, changed: false, from: w, to: w };
+
+  // **Never send something bigger than what arrived.** A small, already
+  // optimised picture can grow when re-encoded, and shrinking that would be
+  // worse than doing nothing.
+  if (blob.size >= file.size && scale === 1) {
+    return { file, changed: false, from: w, to: w };
+  }
+
+  const ext = type === 'image/webp' ? 'webp' : (type === 'image/png' ? 'png' : 'jpg');
+  const shrunk = new File([blob], 'image.' + ext, { type });
+  return { file: shrunk, changed: true, from: w, to: outW,
+           wasBytes: file.size, nowBytes: blob.size };
+}
+
+/// Shrinks, then uploads, and says what it did.
+async function uploadImageAs(file, kind) {
   if (!POSTER_TYPES.includes(file.type)) {
-    throw new Error('The poster must be a JPG, PNG or WebP. That file is ' + (file.type || 'of an unknown kind') + '.');
+    throw new Error('The picture must be a JPG, PNG or WebP. That file is '
+      + (file.type || 'of an unknown kind') + '.');
   }
-  if (file.size > POSTER_MAX_BYTES) {
-    throw new Error(`The poster is ${(file.size / 1024 / 1024).toFixed(1)} MB and the limit is 2 MB. Save it smaller and try again.`);
+
+  const result = await shrinkImage(file, kind);
+  const sending = result.file;
+
+  if (result.changed) {
+    say($('appMsg'),
+      `Shrunk from ${(result.wasBytes / 1024 / 1024).toFixed(1)} MB `
+      + `(${result.from}px) to ${Math.round(result.nowBytes / 1024)} KB `
+      + `(${result.to}px). Uploading...`, 'ok');
   }
-  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+
+  // Only now does the limit matter, and after shrinking almost nothing can
+  // still be over it.
+  if (sending.size > POSTER_MAX_BYTES) {
+    throw new Error(`Even after shrinking this is ${(sending.size / 1024 / 1024).toFixed(1)} MB, `
+      + 'and the limit is 2 MB. Try a smaller picture.');
+  }
+
+  const ext = (sending.name.split('.').pop() || 'jpg').toLowerCase();
   // **The first folder MUST be your own account id.** The bucket's write
   // policy is `(storage.foldername(name))[1] = auth.uid()`, so a tidier path
   // like "events/..." is refused outright. Migration 023.
-  const path = `${me.id}/event-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const path = `${me.id}/img-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
   const { error } = await sb.storage.from('submission-images')
-    .upload(path, file, { cacheControl: '3600', upsert: false, contentType: file.type });
+    // A year, because a picture at this address never changes: a new one gets
+    // a new name. It was an hour, so a reader opening the same event tomorrow
+    // downloaded it all over again.
+    .upload(path, sending, { cacheControl: '31536000', upsert: false, contentType: sending.type });
   if (error) throw error;
   return sb.storage.from('submission-images').getPublicUrl(path).data.publicUrl;
 }
+
+async function uploadPoster(file) { return uploadImageAs(file, 'poster'); }
 
 $('saveEvent').onclick = async () => {
   const btn = $('saveEvent');
@@ -1288,7 +1394,9 @@ function fillSelect(el, rows, value, label, { blank } = {}) {
 /* Uploading reuses the event path: the bucket demands your own account id
    as the first folder, whatever the picture is of. */
 async function uploadImage(file) {
-  return uploadPoster(file);
+  // A singer photo and an album cover are shown far smaller than an event
+  // poster, so they are taken down further.
+  return uploadImageAs(file, 'portrait');
 }
 
 /* A file input that shows what was picked and refuses what the bucket will. */
