@@ -1280,6 +1280,7 @@ $('saveEvent').onclick = async () => {
     if (error) throw error;
 
     say($('appMsg'), id ? 'Saved.' : 'Event created.', 'ok');
+    publishCatalogue('event');
     show($('eventForm'), false);
     loadEvents();
   } catch (e) {
@@ -1295,6 +1296,7 @@ async function togglePublish(e) {
     .update({ is_published: !e.is_published }).eq('id', e.id);
   if (error) return say($('appMsg'), error.message, 'err');
   say($('appMsg'), e.is_published ? 'Unpublished.' : 'Published.', 'ok');
+  publishCatalogue('event');
   loadEvents();
 }
 
@@ -1307,6 +1309,7 @@ async function removeEvent(e) {
     .update({ is_deleted: true, is_published: false }).eq('id', e.id);
   if (error) return say($('appMsg'), error.message, 'err');
   say($('appMsg'), 'Removed.', 'ok');
+  publishCatalogue('event');
   loadEvents();
 }
 
@@ -1421,14 +1424,62 @@ function rowActions(id, published) {
     </td>`;
 }
 
+/* ── telling readers ───────────────────────────────────────────────
+   **Saving is not enough on its own, and was not obviously so.** Readers
+   get their catalogue as files on Cloudflare, written by the
+   `publish-catalogue` function; a row saved here sits in Supabase until
+   that runs. The phone app does this after every save, and this page did
+   not, so the same edit reached readers or did not depending on which
+   screen it was made from.
+
+   Never awaited by the caller and never throws: the save has already
+   succeeded, and a publish that could not run is a line in the console and
+   a warning on the admin card, not a reason to tell somebody their work
+   was lost. */
+const PUBLISH_TABLES = {
+  event:   ['events'],
+  song:    ['songs', 'song_categories', 'song_youtube_sources'],
+  artist:  ['artists'],
+  album:   ['albums'],
+  library: ['library_categories', 'library_items', 'library_chapters'],
+  church:  ['churches', 'church_leaders', 'church_service_times'],
+};
+
+/* Narrow on purpose, and wrong in the safe direction: a name nobody has
+   taught this about publishes everything, which is slow and correct,
+   rather than nothing, which is fast and silently stale. */
+function publishCatalogue(what) {
+  const tables = PUBLISH_TABLES[what] || null;
+  sb.functions
+    .invoke('publish-catalogue', { body: tables ? { tables } : {} })
+    .then(({ data, error }) => {
+      if (error) { console.warn('Saved, but NOT published:', error); return; }
+      if (data && data.error) {
+        console.warn('Saved, but NOT published:', data.error); return;
+      }
+      console.log('Published', what, data);
+    })
+    .catch((e) => console.warn('Saved, but NOT published:', e));
+}
+
 /* Publishing and removing are the same two statements for every catalogue
    table, so they are written once. Removing is always SOFT: a hard delete
    leaves the sync nothing to tell phones about, so the row would stay on
    every device that already had it. */
+/* The shared name for a table, so the two helpers below can say what they
+   changed without every caller being taught to. */
+const WHAT_FOR_TABLE = {
+  events: 'event', songs: 'song', artists: 'artist', albums: 'album',
+  library_items: 'library', library_categories: 'library',
+  library_chapters: 'library', churches: 'church',
+  church_leaders: 'church', church_service_times: 'church',
+};
+
 async function setPublished(table, id, published) {
   const { error } = await sb.from(table).update({ is_published: published }).eq('id', id);
   if (error) return say($('appMsg'), error.message, 'err');
   say($('appMsg'), published ? 'Published.' : 'Unpublished.', 'ok');
+  publishCatalogue(WHAT_FOR_TABLE[table]);
   return true;
 }
 
@@ -1438,6 +1489,7 @@ async function softRemove(table, id, name) {
     .update({ is_deleted: true, is_published: false }).eq('id', id);
   if (error) { say($('appMsg'), error.message, 'err'); return false; }
   say($('appMsg'), 'Removed.', 'ok');
+  publishCatalogue(WHAT_FOR_TABLE[table]);
   return true;
 }
 
@@ -1592,6 +1644,7 @@ $('saveSong').onclick = async () => {
       : await sb.from('songs').insert(row);
     if (error) throw error;
     say($('appMsg'), id ? 'Saved.' : 'Song added.', 'ok');
+    publishCatalogue('song');
     show($('songForm'), false);
     loadSongs();
   } catch (e) {
@@ -1689,6 +1742,7 @@ $('saveArtist').onclick = async () => {
       : await sb.from('artists').insert(row);
     if (error) throw error;
     say($('appMsg'), id ? 'Saved.' : 'Singer added.', 'ok');
+    publishCatalogue('artist');
     show($('artistForm'), false);
     lookups.artists = [];
     loadArtists();
@@ -1793,6 +1847,7 @@ $('saveAlbum').onclick = async () => {
       : await sb.from('albums').insert(row);
     if (error) throw error;
     say($('appMsg'), id ? 'Saved.' : 'Album added.', 'ok');
+    publishCatalogue('album');
     show($('albumForm'), false);
     lookups.albums = [];
     loadAlbums();
@@ -1903,6 +1958,7 @@ $('saveLib').onclick = async () => {
       : await sb.from('library_items').insert(row);
     if (error) throw error;
     say($('appMsg'), id ? 'Saved.' : 'Article added.', 'ok');
+    publishCatalogue('library');
     show($('libForm'), false);
     loadLibrary();
   } catch (e) {
@@ -2116,7 +2172,52 @@ async function decideSub(row, status) {
   }).eq('id', row.id);
   if (error) return say($('appMsg'), error.message, 'err');
   say($('appMsg'), status === 'approved' ? 'Approved.' : 'Rejected.', 'ok');
+  if (status === 'rejected') tidyRejectedPictures(row.id);
   loadSubs();
+}
+
+/* **A rejected submission's picture is read by nobody, ever.** Supabase
+   Storage allows this project 1 GB and a poster is 150-300 KB after the
+   app shrinks it, so the room runs out in the low thousands.
+
+   Only where the submission never made anything. Rejecting is allowed from
+   `published` as well as from `pending` -- deciding something was wrong can
+   happen at any point -- and a published submission's poster is on a live
+   event that readers are looking at. `published_id` is what tells them
+   apart. The policy that permits this is migration 055. */
+async function tidyRejectedPictures(id) {
+  try {
+    const { data, error } = await sb.from('community_submissions')
+      .select('payload, published_id').eq('id', id).maybeSingle();
+    if (error || !data) return;
+    if (data.published_id) {
+      console.log('Submission made something, so its picture stays.');
+      return;
+    }
+
+    /* Every string in the payload, because a list of field names is a
+       thing to forget and forgetting one means a picture nobody deletes. */
+    const marker = '/submission-images/';
+    const paths = [];
+    (function walk(v) {
+      if (typeof v === 'string') {
+        const at = v.indexOf(marker);
+        if (at >= 0) {
+          const p = v.slice(at + marker.length).split('?')[0];
+          if (p) paths.push(p);
+        }
+      } else if (Array.isArray(v)) { v.forEach(walk); }
+      else if (v && typeof v === 'object') { Object.values(v).forEach(walk); }
+    })(data.payload);
+
+    if (!paths.length) return;
+    const { error: gone } = await sb.storage
+      .from('submission-images').remove(paths);
+    if (gone) { console.warn('Could not remove pictures:', gone); return; }
+    console.log('Rejected: removed ' + paths.length + ' picture(s).');
+  } catch (e) {
+    console.warn('Could not tidy pictures:', e);
+  }
 }
 
 /* ── start ─────────────────────────────────────────────────────── */
