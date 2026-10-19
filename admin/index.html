@@ -1197,18 +1197,26 @@ async function uploadImageAs(file, kind) {
       + 'and the limit is 2 MB. Try a smaller picture.');
   }
 
-  const ext = (sending.name.split('.').pop() || 'jpg').toLowerCase();
-  // **The first folder MUST be your own account id.** The bucket's write
-  // policy is `(storage.foldername(name))[1] = auth.uid()`, so a tidier path
-  // like "events/..." is refused outright. Migration 023.
-  const path = `${me.id}/img-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-  const { error } = await sb.storage.from('submission-images')
-    // A year, because a picture at this address never changes: a new one gets
-    // a new name. It was an hour, so a reader opening the same event tomorrow
-    // downloaded it all over again.
-    .upload(path, sending, { cacheControl: '31536000', upsert: false, contentType: sending.type });
+  // **To Cloudflare, through the `upload-picture` function.** Supabase
+  // Storage allows this project 1 GB, which at 150-300 KB a poster is about
+  // four thousand pictures EVER -- and every one of them was served to
+  // readers out of the same 5 GB of traffic. The bucket has no such limit
+  // and costs nothing to serve from.
+  //
+  // This page holds no key that can write to that bucket, and should not:
+  // it runs in a browser, where anything it holds can be read. The bytes go
+  // to the function, which holds the key on the server, checks the sender is
+  // signed in, and checks the file really is a picture before writing it.
+  //
+  // The server chooses the name. A name from here could write over somebody
+  // else's poster, or walk out of the folder entirely.
+  const { data, error } = await sb.functions.invoke('upload-picture', {
+    body: sending,
+    headers: { 'Content-Type': sending.type },
+  });
   if (error) throw error;
-  return sb.storage.from('submission-images').getPublicUrl(path).data.publicUrl;
+  if (!data || !data.url) throw new Error((data && data.error) || 'Upload failed.');
+  return data.url;
 }
 
 async function uploadPoster(file) { return uploadImageAs(file, 'poster'); }
