@@ -290,8 +290,13 @@
             </select>
           </div>
           <div>
-            <label for="ev_date">Date and time</label>
+            <label for="ev_date">Starts</label>
             <input id="ev_date" type="datetime-local">
+          </div>
+          <div>
+            <label for="ev_end">Ends</label>
+            <input id="ev_end" type="datetime-local">
+            <p class="note">Only for something that runs more than one session.</p>
           </div>
         </div>
         <div class="grid2">
@@ -321,6 +326,7 @@
         <label for="ev_poster">Poster</label>
         <input id="ev_poster" type="file" accept="image/*">
         <p class="note" id="ev_posterNote">No poster chosen.</p>
+        <button type="button" class="act hide" id="ev_posterClear">Remove picture</button>
         <img class="poster hide" id="ev_posterPreview" alt="">
         <label class="row" style="margin-top:12px">
           <input type="checkbox" id="ev_published" style="width:auto">
@@ -981,15 +987,44 @@ document.querySelectorAll('nav button').forEach((b) => {
 /* ── events ────────────────────────────────────────────────────── */
 let posterFile = null;
 
+/* **Shown from this computer, because that is where it still is.** The
+   file is not sent until Save, so a wrong picture costs nothing to change
+   and leaves nothing behind. The preview element existed and was never
+   filled for a newly chosen file, so picking one showed only its name. */
+function showPosterPreview() {
+  const img = $('ev_posterPreview');
+  const clear = $('ev_posterClear');
+  if (!posterFile) {
+    if (img.dataset.local === '1') URL.revokeObjectURL(img.src);
+    img.dataset.local = '';
+    show(img, false);
+    show(clear, false);
+    $('ev_posterNote').textContent = 'No poster chosen.';
+    return;
+  }
+  if (img.dataset.local === '1') URL.revokeObjectURL(img.src);
+  img.src = URL.createObjectURL(posterFile);
+  img.dataset.local = '1';
+  show(img, true);
+  show(clear, true);
+  $('ev_posterNote').textContent =
+    `${posterFile.name}, ${Math.max(1, Math.round(posterFile.size / 1024))} KB`
+    + ' - not sent yet';
+}
+
 $('ev_poster').onchange = (e) => {
   posterFile = e.target.files[0] || null;
-  $('ev_posterNote').textContent = posterFile
-    ? `${posterFile.name}, ${(posterFile.size / 1024 / 1024).toFixed(1)} MB`
-    : 'No poster chosen.';
+  showPosterPreview();
+};
+
+$('ev_posterClear').onclick = () => {
+  posterFile = null;
+  $('ev_poster').value = '';
+  showPosterPreview();
 };
 
 function blankEventForm() {
-  ['ev_id','ev_title','ev_org','ev_speaker','ev_loc','ev_desc','ev_link','ev_video','ev_date']
+  ['ev_id','ev_title','ev_org','ev_speaker','ev_loc','ev_desc','ev_link','ev_video','ev_date','ev_end']
     .forEach((f) => { $(f).value = ''; });
   $('ev_type').value = 'conference';
   $('ev_published').checked = false;
@@ -998,8 +1033,7 @@ function blankEventForm() {
   show($('ev_featuredWrap'), false);
   posterFile = null;
   $('ev_poster').value = '';
-  $('ev_posterNote').textContent = 'No poster chosen.';
-  show($('ev_posterPreview'), false);
+  showPosterPreview();
 }
 
 $('ev_featured').onchange = () => {
@@ -1062,6 +1096,7 @@ function editEvent(e) {
   $('ev_title').value = e.title || '';
   $('ev_type').value = e.type || 'other';
   $('ev_date').value = toLocalInput(e.event_date);
+  $('ev_end').value = e.end_date ? toLocalInput(e.end_date) : '';
   $('ev_org').value = e.organizer || '';
   $('ev_speaker').value = e.speaker || '';
   $('ev_loc').value = e.location || '';
@@ -1233,6 +1268,15 @@ $('saveEvent').onclick = async () => {
   if (!$('ev_loc').value.trim()) return say($('appMsg'), 'The event needs a location.', 'err');
   if (!$('ev_org').value.trim()) return say($('appMsg'), 'The event needs an organizer.', 'err');
 
+  // **An end before its own start is somebody's typing mistake.** The
+  // database refuses it (migration 056) but says so as a constraint name,
+  // which tells a reader nothing about what they did.
+  const ends = $('ev_end').value;
+  if (ends && new Date(ends) < new Date(when)) {
+    return say($('appMsg'),
+      'The end is before the start. Check the two dates.', 'err');
+  }
+
   // **Caught here so the answer is a sentence.** The database refuses an end
   // before its own beginning, correctly, but it says so as
   // 'violates check constraint "valid_featured_window"', which tells a
@@ -1262,6 +1306,10 @@ $('saveEvent').onclick = async () => {
       title,
       type: $('ev_type').value,
       event_date: new Date(when).toISOString(),
+      // Null rather than empty: the column is a timestamp and '' is not a
+      // time. Null means "ends when it starts", which is what every event
+      // meant before there was anywhere to say otherwise.
+      end_date: ends ? new Date(ends).toISOString() : null,
       organizer: $('ev_org').value.trim(),
       speaker: $('ev_speaker').value.trim() || null,
       location: $('ev_loc').value.trim(),
