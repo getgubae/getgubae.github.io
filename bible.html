@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="am">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Read the Bible in Amharic and English — Gubae</title>
+<meta name="description" content="The whole Bible, all 66 books, in Amharic and English. Free to read, with search, and a link for every chapter.">
+<link rel="canonical" href="https://getgubae.com/bible.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://getgubae.com/bible.html">
+<meta property="og:title" content="Read the Bible in Amharic and English">
+<meta property="og:description" content="All 66 books, free to read, with search. From Gubae.">
+<meta property="og:image" content="https://getgubae.com/images/og.jpg">
+<meta name="theme-color" content="#100b1e">
+<link rel="icon" href="images/app-icon.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;600;700;800&family=Noto+Serif+Ethiopic:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip" href="#chapter"><span data-lang="en">Skip to the text</span><span data-lang="am">ወደ ጽሑፉ ዝለል</span></a>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="/"><img class="on-light" src="images/logo-on-light.webp" width="700" height="192" alt="Gubae"><img class="on-dark" src="images/logo-on-dark.webp" width="700" height="192" alt=""></a>
+    <nav class="site-nav">
+      <a href="/"><span data-lang="en">Home</span><span data-lang="am">መነሻ</span></a>
+      <a class="hide-sm" href="lyrics.html"><span data-lang="en">Lyrics</span><span data-lang="am">መዝሙሮች</span></a>
+      <a class="hide-sm" href="events.html"><span data-lang="en">Events</span><span data-lang="am">ጉባኤዎች</span></a>
+      <a class="hide-sm" href="https://play.google.com/store/apps/details?id=com.gubae.app"><span data-lang="en">Get the app</span><span data-lang="am">መተግበሪያው</span></a>
+      <select class="lang-select" id="lang-select" aria-label="Language">
+        <option value="am">አማርኛ</option>
+        <option value="en">English</option>
+      </select>
+    </nav>
+  </div>
+</header>
+
+<div class="reader-head">
+  <div class="wrap">
+    <div class="reader-bar">
+      <select id="book" aria-label="Book"></select>
+      <select id="chapter-pick" aria-label="Chapter"></select>
+
+      <span class="seg" role="group" aria-label="Version">
+        <button type="button" id="v-am" aria-pressed="true">አማርኛ</button>
+        <button type="button" id="v-en" aria-pressed="false">English</button>
+      </span>
+
+      <input id="search" type="search" autocomplete="off"
+             placeholder="Search this book" aria-label="Search this book">
+
+      <span class="seg" role="group" aria-label="Text size">
+        <button type="button" id="smaller" aria-label="Smaller text">A−</button>
+        <button type="button" id="bigger" aria-label="Larger text">A+</button>
+      </span>
+    </div>
+  </div>
+</div>
+
+<main class="reader">
+  <div class="wrap narrow">
+    <h1 class="chapter-title" id="chapter-title">…</h1>
+    <p class="chapter-sub" id="chapter-sub"></p>
+
+    <div id="results" class="results" hidden></div>
+
+    <div id="chapter" class="verses"></div>
+
+    <nav class="pager" id="pager" hidden>
+      <button class="btn btn-outline" type="button" id="prev">←&nbsp;<span data-lang="en">Previous</span><span data-lang="am">ቀዳሚ</span></button>
+      <button class="btn btn-outline" type="button" id="next"><span data-lang="en">Next</span><span data-lang="am">ቀጣይ</span>&nbsp;→</button>
+    </nav>
+
+    <aside class="reader-foot">
+      <img src="images/app-icon.webp" width="44" height="44" alt="">
+      <div>
+        <strong><span data-lang="en">Read it without a network</span><span data-lang="am">ያለ መስመር ያንብቡት</span></strong>
+        <p>
+          <span data-lang="en">In the app the whole Bible sits on your phone, with bookmarks, highlights and your own notes.</span>
+          <span data-lang="am">በመተግበሪያው ውስጥ ሙሉ መጽሐፍ ቅዱስ በስልክዎ ላይ ነው፤ ከዕልባት፣ ከማድመቂያና ከራስዎ ማስታወሻ ጋር።</span>
+        </p>
+      </div>
+      <a class="play-badge" href="https://play.google.com/store/apps/details?id=com.gubae.app"><img src="images/google-play-badge.png" width="646" height="250" alt="Get it on Google Play"></a>
+    </aside>
+  </div>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <img class="on-light" src="images/logo-on-light.webp" width="700" height="192" alt="Gubae">
+        <img class="on-dark" src="images/logo-on-dark.webp" width="700" height="192" alt="">
+        <p><span data-lang="en">Your daily companion in faith. Built in Addis Ababa.</span><span data-lang="am">የእምነት አጋርዎ። በአዲስ አበባ የተሠራ።</span></p>
+      </div>
+      <div>
+        <h4><span data-lang="en">Explore</span><span data-lang="am">ያስሱ</span></h4>
+        <ul>
+          <li><a href="bible.html"><span data-lang="en">Bible</span><span data-lang="am">መጽሐፍ ቅዱስ</span></a></li>
+          <li><a href="lyrics.html"><span data-lang="en">Lyrics</span><span data-lang="am">መዝሙሮች</span></a></li>
+          <li><a href="events.html"><span data-lang="en">Events</span><span data-lang="am">ጉባኤዎች</span></a></li>
+        </ul>
+      </div>
+      <div>
+        <h4><span data-lang="en">Get the app</span><span data-lang="am">መተግበሪያው</span></h4>
+        <ul>
+          <li><a href="https://play.google.com/store/apps/details?id=com.gubae.app">Google Play</a></li>
+          <li><a href="https://play.google.com/store/apps/details?id=com.gubae.app"><span data-lang="en">Add an event</span><span data-lang="am">ጉባኤ ያክሉ</span></a></li>
+          <li><a href="https://play.google.com/store/apps/details?id=com.gubae.app"><span data-lang="en">Add lyrics</span><span data-lang="am">ግጥም ያክሉ</span></a></li>
+        </ul>
+      </div>
+      <div>
+        <h4><span data-lang="en">Company</span><span data-lang="am">ድርጅት</span></h4>
+        <ul>
+          <li><a href="mailto:support@getgubae.com"><span data-lang="en">Contact</span><span data-lang="am">ያግኙን</span></a></li>
+          <li><a href="https://t.me/getgubae">Telegram</a></li>
+          <li><a href="https://www.tiktok.com/@gubaeapps">TikTok</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="year">2026</span> Gubae. <span data-lang="en">Built with care by Axumora.</span><span data-lang="am">በAxumora በጥንቃቄ የተሠራ።</span></span>
+      <span>
+        <a href="copyright.html"><span data-lang="en">Copyright</span><span data-lang="am">የቅጂ መብት</span></a> ·
+        <a href="privacy.html"><span data-lang="en">Privacy</span><span data-lang="am">ግላዊነት</span></a> &middot;
+        <a href="terms.html"><span data-lang="en">Terms</span><span data-lang="am">ውሎች</span></a> &middot;
+        <a href="delete-account.html"><span data-lang="en">Delete your account</span><span data-lang="am">መለያ ይሰርዙ</span></a>
+      </span>
+    </div>
+  </div>
+</footer>
+<script>
+  (function () {
+    var y = document.getElementById('year');
+    if (y) y.textContent = new Date().getFullYear();
+  }());
+</script>
+
+<script src="site.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var bookSel = document.getElementById('book');
+  var chapSel = document.getElementById('chapter-pick');
+  var titleEl = document.getElementById('chapter-title');
+  var subEl = document.getElementById('chapter-sub');
+  var bodyEl = document.getElementById('chapter');
+  var resultsEl = document.getElementById('results');
+  var pagerEl = document.getElementById('pager');
+  var searchEl = document.getElementById('search');
+
+  var index = null;       // the 66 books, their names and chapter counts
+  var book = null;        // the one book currently fetched
+  var loaded = {};        // order -> book, so paging back is instant
+  var version = 'am';     // which scripture is shown, not the page language
+  var current = { order: 1, chapter: 1, verse: null };
+
+  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function recall(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+
+  function isAmharic() { return document.documentElement.lang === 'am'; }
+  function nameOf(b) { return isAmharic() ? b.am : b.en; }
+
+  // ---------------------------------------------------------------- data
+
+  function fetchBook(order) {
+    if (loaded[order]) return Promise.resolve(loaded[order]);
+    var file = 'data/bible/' + (order < 10 ? '0' + order : order) + '.json';
+    return fetch(file).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.json();
+    }).then(function (b) { loaded[order] = b; return b; });
+  }
+
+  // -------------------------------------------------------------- drawing
+
+  function fillBooks() {
+    bookSel.innerHTML = '';
+    [['ot', isAmharic() ? 'ብሉይ ኪዳን' : 'Old Testament'],
+     ['nt', isAmharic() ? 'አዲስ ኪዳን' : 'New Testament']].forEach(function (pair) {
+      var group = document.createElement('optgroup');
+      group.label = pair[1];
+      index.books.filter(function (b) { return b.testament === pair[0]; })
+        .forEach(function (b) {
+          var o = document.createElement('option');
+          o.value = b.order;
+          o.textContent = nameOf(b);
+          group.appendChild(o);
+        });
+      bookSel.appendChild(group);
+    });
+    bookSel.value = current.order;
+  }
+
+  function fillChapters(count) {
+    chapSel.innerHTML = '';
+    var word = isAmharic() ? 'ምዕራፍ ' : 'Chapter ';
+    for (var i = 1; i <= count; i++) {
+      var o = document.createElement('option');
+      o.value = i;
+      o.textContent = word + i;
+      chapSel.appendChild(o);
+    }
+    chapSel.value = current.chapter;
+  }
+
+  function chapterOf(n) {
+    for (var i = 0; i < book.chapters.length; i++) {
+      if (book.chapters[i].n === n) return book.chapters[i];
+    }
+    return null;
+  }
+
+  function draw() {
+    // Nothing is fetched yet when the version buttons are first set up, and
+    // reaching into a book that is not there threw, which killed the whole
+    // start-up: empty menus and a page stuck on its loading dots.
+    if (!book) return;
+    var chapter = chapterOf(current.chapter);
+    var label = isAmharic() ? book.am : book.en;
+
+    titleEl.textContent = label + ' ' + current.chapter;
+    document.title = label + ' ' + current.chapter + ' — Gubae';
+
+    var verses = chapter ? chapter[version] : [];
+    if (!verses.length) {
+      // The two editions divide some chapters differently; say so rather
+      // than show an empty page and let the reader think it is broken.
+      subEl.textContent = isAmharic()
+        ? 'ይህ ምዕራፍ በዚህ ቅጂ ውስጥ የለም።'
+        : 'This chapter is not in this version.';
+      bodyEl.innerHTML = '';
+    } else {
+      subEl.textContent = (version === 'am' ? 'የ1954 አማርኛ' : 'World English Bible') +
+        ' · ' + verses.length + (isAmharic() ? ' ቁጥሮች' : ' verses');
+      var html = '';
+      for (var i = 0; i < verses.length; i++) {
+        var n = verses[i][0], text = verses[i][1];
+        html += '<p id="v' + n + '"><span class="vnum">' + n + '</span>' + escape(text) + '</p>';
+      }
+      bodyEl.innerHTML = html;
+      bodyEl.lang = version;
+    }
+
+    pagerEl.hidden = false;
+    bookSel.value = current.order;
+    chapSel.value = current.chapter;
+
+    if (current.verse) {
+      var target = document.getElementById('v' + current.verse);
+      if (target) {
+        target.classList.add('hit');
+        target.scrollIntoView({ block: 'center' });
+      }
+    }
+  }
+
+  function escape(s) {
+    return s.replace(/[&<>]/g, function (c) {
+      return c === '&' ? '&amp;' : c === '<' ? '&lt;' : '&gt;';
+    });
+  }
+
+  // ------------------------------------------------------------ going places
+
+  function go(order, chapter, verse, push) {
+    current = { order: +order, chapter: +chapter, verse: verse ? +verse : null };
+    store('gubae.place', current.order + '/' + current.chapter);
+    bodyEl.innerHTML = '<p class="loading">…</p>';
+    closeSearch();
+
+    fetchBook(current.order).then(function (b) {
+      book = b;
+      if (!chapterOf(current.chapter)) current.chapter = b.chapters[0].n;
+      fillChapters(b.chapters.length);
+      draw();
+      if (push !== false) {
+        var hash = '#/' + current.order + '/' + current.chapter +
+          (current.verse ? '/' + current.verse : '');
+        if (location.hash !== hash) history.replaceState(null, '', hash);
+      }
+    }).catch(function () {
+      bodyEl.innerHTML = '<p class="empty">' + (isAmharic()
+        ? 'ይህን መጽሐፍ መጫን አልተቻለም። እንደገና ይሞክሩ።'
+        : 'That book could not be loaded. Please try again.') + '</p>';
+    });
+  }
+
+  function step(by) {
+    if (!book) return;
+    var chapters = book.chapters;
+    var at = chapters.findIndex(function (c) { return c.n === current.chapter; });
+    var nextAt = at + by;
+    if (nextAt >= 0 && nextAt < chapters.length) {
+      go(current.order, chapters[nextAt].n);
+      window.scrollTo({ top: 0 });
+      return;
+    }
+    var order = current.order + by;
+    if (order < 1 || order > 66) return;
+    fetchBook(order).then(function (b) {
+      go(order, by > 0 ? b.chapters[0].n : b.chapters[b.chapters.length - 1].n);
+      window.scrollTo({ top: 0 });
+    });
+  }
+
+  function fromHash() {
+    var m = /^#\/(\d+)\/(\d+)(?:\/(\d+))?/.exec(location.hash);
+    if (m) return { order: +m[1], chapter: +m[2], verse: m[3] ? +m[3] : null };
+    var saved = (recall('gubae.place') || '').split('/');
+    if (saved.length === 2 && +saved[0]) return { order: +saved[0], chapter: +saved[1], verse: null };
+    return { order: 1, chapter: 1, verse: null };
+  }
+
+  // ------------------------------------------------------------------ search
+
+  function closeSearch() {
+    resultsEl.hidden = true;
+    resultsEl.innerHTML = '';
+    bodyEl.hidden = false;
+  }
+
+  function runSearch(term) {
+    term = term.trim();
+    if (!book || term.length < 2) { closeSearch(); return; }
+
+    var needle = term.toLowerCase();
+    var found = [];
+    for (var i = 0; i < book.chapters.length && found.length < 60; i++) {
+      var ch = book.chapters[i];
+      var verses = ch[version] || [];
+      for (var j = 0; j < verses.length && found.length < 60; j++) {
+        if (verses[j][1].toLowerCase().indexOf(needle) !== -1) {
+          found.push({ chapter: ch.n, verse: verses[j][0], text: verses[j][1] });
+        }
+      }
+    }
+
+    var label = isAmharic() ? book.am : book.en;
+    bodyEl.hidden = true;
+    resultsEl.hidden = false;
+
+    if (!found.length) {
+      resultsEl.innerHTML = '<p class="empty">' + (isAmharic()
+        ? '"' + escape(term) + '" በ' + label + ' ውስጥ አልተገኘም።'
+        : 'Nothing in ' + label + ' matches “' + escape(term) + '”.') + '</p>';
+      return;
+    }
+
+    var head = isAmharic()
+      ? found.length + ' ውጤት በ' + label + ' ውስጥ'
+      : found.length + (found.length === 60 ? '+ matches in ' : ' matches in ') + label;
+
+    var html = '<p class="chapter-sub">' + head + '</p>';
+    found.forEach(function (f) {
+      var at = f.text.toLowerCase().indexOf(needle);
+      var marked = escape(f.text.slice(0, at)) + '<mark>' +
+        escape(f.text.slice(at, at + term.length)) + '</mark>' +
+        escape(f.text.slice(at + term.length));
+      html += '<button type="button" data-ch="' + f.chapter + '" data-v="' + f.verse + '">' +
+        '<span class="ref">' + label + ' ' + f.chapter + ':' + f.verse + '</span>' +
+        marked + '</button>';
+    });
+    resultsEl.innerHTML = html;
+  }
+
+  // ------------------------------------------------------------------- wiring
+
+  bookSel.addEventListener('change', function () {
+    searchEl.value = '';
+    go(bookSel.value, 1);
+    window.scrollTo({ top: 0 });
+  });
+
+  chapSel.addEventListener('change', function () {
+    searchEl.value = '';
+    go(current.order, chapSel.value);
+    window.scrollTo({ top: 0 });
+  });
+
+  document.getElementById('prev').addEventListener('click', function () { step(-1); });
+  document.getElementById('next').addEventListener('click', function () { step(1); });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.target.matches('input, select, textarea')) return;
+    if (e.key === 'ArrowLeft') step(-1);
+    if (e.key === 'ArrowRight') step(1);
+  });
+
+  function setVersion(v) {
+    version = v;
+    store('gubae.version', v);
+    document.getElementById('v-am').setAttribute('aria-pressed', String(v === 'am'));
+    document.getElementById('v-en').setAttribute('aria-pressed', String(v === 'en'));
+    if (searchEl.value.trim()) runSearch(searchEl.value); else draw();
+  }
+  document.getElementById('v-am').addEventListener('click', function () { setVersion('am'); });
+  document.getElementById('v-en').addEventListener('click', function () { setVersion('en'); });
+
+  var typing = null;
+  searchEl.addEventListener('input', function () {
+    clearTimeout(typing);
+    typing = setTimeout(function () { runSearch(searchEl.value); }, 160);
+  });
+
+  resultsEl.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-ch]');
+    if (!b) return;
+    searchEl.value = '';
+    go(current.order, b.getAttribute('data-ch'), b.getAttribute('data-v'));
+  });
+
+  var size = parseFloat(recall('gubae.size')) || 1.14;
+  function setSize(next) {
+    size = Math.min(1.9, Math.max(0.92, next));
+    document.documentElement.style.setProperty('--read-size', size + 'rem');
+    store('gubae.size', size);
+  }
+  setSize(size);
+  document.getElementById('bigger').addEventListener('click', function () { setSize(size + 0.1); });
+  document.getElementById('smaller').addEventListener('click', function () { setSize(size - 0.1); });
+
+  window.addEventListener('hashchange', function () {
+    var h = fromHash();
+    if (h.order !== current.order || h.chapter !== current.chapter) {
+      go(h.order, h.chapter, h.verse, false);
+    }
+  });
+
+  document.addEventListener('gubae:lang', function () {
+    searchEl.placeholder = isAmharic() ? 'በዚህ መጽሐፍ ውስጥ ይፈልጉ' : 'Search this book';
+    if (!index) return;
+    fillBooks();
+    if (book) { fillChapters(book.chapters.length); draw(); }
+  });
+
+  // --------------------------------------------------------------- start up
+
+  if (recall('gubae.version') === 'en') version = 'en';
+  setVersion(version);
+
+  fetch('data/bible/index.json')
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      index = d;
+      current = fromHash();
+      fillBooks();
+      searchEl.placeholder = isAmharic() ? 'በዚህ መጽሐፍ ውስጥ ይፈልጉ' : 'Search this book';
+      go(current.order, current.chapter, current.verse);
+    })
+    .catch(function () {
+      titleEl.textContent = isAmharic() ? 'መጫን አልተቻለም' : 'Could not load';
+      bodyEl.innerHTML = '<p class="empty">' + (isAmharic()
+        ? 'የመጻሕፍቱ ዝርዝር አልተጫነም። ገጹን እንደገና ይክፈቱ።'
+        : 'The list of books did not load. Please reload the page.') + '</p>';
+    });
+}());
+</script>
+</body>
+</html>

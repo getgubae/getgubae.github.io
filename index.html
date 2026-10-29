@@ -1,43 +1,418 @@
 <!doctype html>
-<html lang="en">
+<html lang="am">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Gubae</title>
-<style>
-:root { color-scheme: light dark; --ink:#181b33; --muted:#3c3850; --bg:#f8f7fb;
-        --line:#ddd9ea; --brand:#3b2e7e; }
-@media (prefers-color-scheme: dark) {
-  :root { --ink:#fff; --muted:#cdc8e0; --bg:#100b1e; --line:#2a2340; --brand:#e0a458; }
-}
-* { box-sizing:border-box; }
-body { margin:0; background:var(--bg); color:var(--ink); line-height:1.65;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-header.hero { position:relative; overflow:hidden; padding:72px 20px 64px;
-  background:linear-gradient(140deg,#2b1f4a 0%,#191130 55%,#100b1e 100%); }
-header.hero::before { content:""; position:absolute; inset:-40% -20% auto -20%;
-  height:150%; border-radius:50%; border:1px solid rgba(224,164,88,.22); }
-.hero-inner { position:relative; max-width:720px; margin:0 auto; }
-.hero img { height:64px; display:block; }
-.hero p { margin:16px 0 0; color:#cdc8e0; }
-main { max-width:720px; margin:0 auto; padding:34px 20px 80px; }
-a.card { display:block; padding:18px 20px; margin-bottom:12px; border-radius:16px;
-  border:1px solid var(--line); color:var(--ink); text-decoration:none; font-weight:600; }
-a.card span { display:block; font-weight:400; color:var(--muted); font-size:.95rem; }
-</style>
+<title>Gubae — the Bible, songs and church life, in Amharic</title>
+<meta name="description" content="The whole Bible in Amharic and English, thousands of songs with their words, and the gatherings happening near you. Free, and it works without internet.">
+<link rel="canonical" href="https://getgubae.com/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://getgubae.com/">
+<meta property="og:title" content="Gubae — your daily companion in faith">
+<meta property="og:description" content="The Bible, the songs and the gatherings, in Amharic. Free on Android.">
+<meta property="og:image" content="https://getgubae.com/images/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0f0a1e">
+<link rel="icon" href="images/app-icon.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;600;700;800&family=Noto+Serif+Ethiopic:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<header class="hero">
-  <div class="hero-inner">
-    <img src="gubae-wordmark.png" alt="Gubae">
-    <p>Your daily companion in faith</p>
+<a class="skip" href="#main"><span data-lang="en">Skip to content</span><span data-lang="am">ወደ ይዘቱ ዝለል</span></a>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <img class="on-light" src="images/logo-on-light.webp" width="700" height="192" alt="Gubae">
+      <img class="on-dark" src="images/logo-on-dark.webp" width="700" height="192" alt="">
+    </a>
+    <nav class="site-nav">
+      <a class="hide-sm" href="bible.html"><span data-lang="en">Bible</span><span data-lang="am">መጽሐፍ ቅዱስ</span></a>
+      <a class="hide-sm" href="lyrics.html"><span data-lang="en">Lyrics</span><span data-lang="am">መዝሙሮች</span></a>
+      <a class="hide-sm" href="events.html"><span data-lang="en">Events</span><span data-lang="am">ጉባኤዎች</span></a>
+      <a class="hide-sm" href="https://play.google.com/store/apps/details?id=com.gubae.app"><span data-lang="en">Get the app</span><span data-lang="am">መተግበሪያው</span></a>
+      <select class="lang-select" id="lang-select" aria-label="Language">
+        <option value="am">አማርኛ</option>
+        <option value="en">English</option>
+      </select>
+    </nav>
   </div>
 </header>
-<main>
-  <a class="card" href="privacy.html">Privacy policy
-    <span>What Gubae keeps, and what it does not</span></a>
-  <a class="card" href="terms.html">Terms of use
-    <span>What you agree to when you use Gubae</span></a>
+
+<main id="main">
+
+  <div class="stage">
+    <div class="deck">
+      <!-- The pitch does not move. -->
+      <div class="pitch">
+        <p class="eyebrow"><span data-lang="en">Your daily companion in faith</span><span data-lang="am">የእምነት አጋርዎ</span></p>
+        <h1><span data-lang="en">The Bible, the songs and your church life.</span><span data-lang="am">መጽሐፍ ቅዱስ፣ መዝሙርና የቤተ ክርስቲያን ሕይወትዎ።</span></h1>
+        <p class="meta"><span data-lang="en">In Amharic and English. Free, and it works with no internet.</span><span data-lang="am">በአማርኛና በእንግሊዝኛ። ነፃ፣ ያለ ኢንተርኔትም ይሠራል።</span></p>
+        <div class="cta-row">
+          <a class="play-badge" href="https://play.google.com/store/apps/details?id=com.gubae.app"><img src="images/google-play-badge.png" width="646" height="250" alt="Get it on Google Play"></a>
+          <a class="btn btn-ghost" href="bible.html"><span data-lang="en">Read the Bible</span><span data-lang="am">መጽሐፍ ቅዱስን ያንብቡ</span></a>
+        </div>
+      </div>
+
+      <!-- This side turns: what is coming up, then today's verse. -->
+      <div class="turner-col">
+        <div class="turner" id="turner" aria-roledescription="carousel">
+          <div class="panel on" data-panel>
+            <p class="eyebrow"><span data-lang="en">Verse of the day</span><span data-lang="am">የዕለቱ ቃል</span></p>
+            <p class="quote">…</p>
+          </div>
+        </div>
+        <div class="dots" id="dots" role="tablist" aria-label="Slides"></div>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap">
+      <div class="grid cols-3">
+        <a class="card" href="bible.html">
+          <div class="tile-icon">✝</div>
+          <h3><span data-lang="en">Read the Bible</span><span data-lang="am">መጽሐፍ ቅዱስን ያንብቡ</span></h3>
+          <p><span data-lang="en">All 66 books in Amharic and English, with search and a link for every chapter.</span><span data-lang="am">ሁሉም 66 መጻሕፍት በአማርኛና በእንግሊዝኛ፣ ከፍለጋና ከምዕራፍ አገናኝ ጋር።</span></p>
+        </a>
+        <a class="card" href="lyrics.html">
+          <div class="tile-icon">♪</div>
+          <h3><span data-lang="en">Lyrics</span><span data-lang="am">የመዝሙር ግጥሞች</span></h3>
+          <p><span data-lang="en">Thousands of songs by album, by singer, or by title — with their lyrics.</span><span data-lang="am">በሺዎች የሚቆጠሩ መዝሙሮች በአልበም፣ በዘማሪ ወይም በመዝሙር — ከግጥማቸው ጋር።</span></p>
+        </a>
+        <a class="card" href="events.html">
+          <div class="tile-icon">◷</div>
+          <h3><span data-lang="en">What's on</span><span data-lang="am">ምን እየተካሄደ ነው</span></h3>
+          <p><span data-lang="en">Conferences, camps and worship nights, with where and when.</span><span data-lang="am">ጉባኤዎች፣ ካምፖችና የአምልኮ ሌሊቶች፣ ከቦታውና ከሰዓቱ ጋር።</span></p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="events">
+    <div class="wrap">
+      <div class="section-head head-row">
+        <div>
+          <p class="eyebrow"><span data-lang="en">Coming up</span><span data-lang="am">በቅርቡ</span></p>
+          <h2><span data-lang="en">Gatherings near you</span><span data-lang="am">በአቅራቢያዎ ያሉ ጉባኤዎች</span></h2>
+        </div>
+        <a class="btn btn-outline btn-sm" href="events.html"><span data-lang="en">See all</span><span data-lang="am">ሁሉንም ይመልከቱ</span></a>
+      </div>
+      <div class="grid cols-3" id="event-cards"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="card">
+          <div class="tile-icon">＋</div>
+          <h3><span data-lang="en">Have a gathering to announce?</span><span data-lang="am">የሚያሳውቁት ጉባኤ አለዎት?</span></h3>
+          <p><span data-lang="en">Churches and ministries add their own conferences, camps and worship nights from inside the app. Send it in and it reaches everybody using Gubae.</span><span data-lang="am">አብያተ ክርስቲያናትና አገልግሎቶች ጉባኤዎቻቸውን፣ ካምፖቻቸውንና የአምልኮ ሌሊቶቻቸውን ከመተግበሪያው ውስጥ ያስገባሉ። ይላኩት፤ ጉባኤን ለሚጠቀም ሁሉ ይደርሳል።</span></p>
+          <div class="cta-row" style="margin-top:18px">
+            <a class="play-badge" href="https://play.google.com/store/apps/details?id=com.gubae.app"><img src="images/google-play-badge.png" width="646" height="250" alt="Get it on Google Play"></a>
+          </div>
+        </div>
+        <div class="card">
+          <div class="tile-icon">♫</div>
+          <h3><span data-lang="en">Know a song that is missing?</span><span data-lang="am">የጎደለ መዝሙር ያውቃሉ?</span></h3>
+          <p><span data-lang="en">Send the words, the singer and the album from inside the app. Every submission is read by hand before it is published.</span><span data-lang="am">ግጥሙን፣ ዘማሪውንና አልበሙን ከመተግበሪያው ውስጥ ይላኩ። የሚላከው ሁሉ ከመታተሙ በፊት በእጅ ይነበባል።</span></p>
+          <div class="cta-row" style="margin-top:18px">
+            <a class="play-badge" href="https://play.google.com/store/apps/details?id=com.gubae.app"><img src="images/google-play-badge.png" width="646" height="250" alt="Get it on Google Play"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="inside">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow"><span data-lang="en">What's inside</span><span data-lang="am">ምን እንዳለ</span></p>
+        <h2><span data-lang="en">Eight things you'll use every week</span><span data-lang="am">በየሳምንቱ የሚጠቀሙባቸው ስምንት ነገሮች</span></h2>
+      </div>
+    </div>
+    <div class="rail">
+      <figure><img src="images/screen-1.webp" width="540" height="960" loading="lazy" alt="The Gubae home screen"><figcaption><span data-lang="en">Everything in one place</span><span data-lang="am">ሁሉም በአንድ ቦታ</span></figcaption></figure>
+      <figure><img src="images/screen-2.webp" width="540" height="960" loading="lazy" alt="Choosing a book of the Bible"><figcaption><span data-lang="en">The whole Bible, offline</span><span data-lang="am">ሙሉ መጽሐፍ ቅዱስ፣ ያለ ኢንተርኔት</span></figcaption></figure>
+      <figure><img src="images/screen-3.webp" width="540" height="960" loading="lazy" alt="Lyrics listed by singer"><figcaption><span data-lang="en">Every song, with its words</span><span data-lang="am">እያንዳንዱ መዝሙር፣ ከግጥሙ ጋር</span></figcaption></figure>
+      <figure><img src="images/screen-4.webp" width="540" height="960" loading="lazy" alt="A library article"><figcaption><span data-lang="en">Classic books and teaching</span><span data-lang="am">የቆዩ መጻሕፍትና ትምህርት</span></figcaption></figure>
+      <figure><img src="images/screen-5.webp" width="540" height="960" loading="lazy" alt="A reading plan"><figcaption><span data-lang="en">A reading plan that fits your day</span><span data-lang="am">ከዕለትዎ ጋር የሚሄድ የንባብ ዕቅድ</span></figcaption></figure>
+      <figure><img src="images/screen-6.webp" width="540" height="960" loading="lazy" alt="A prayer list"><figcaption><span data-lang="en">Keep a prayer list</span><span data-lang="am">የጸሎት ዝርዝር ይያዙ</span></figcaption></figure>
+      <figure><img src="images/screen-7.webp" width="540" height="960" loading="lazy" alt="Upcoming events"><figcaption><span data-lang="en">Conferences, camps and nights</span><span data-lang="am">ጉባኤዎች፣ ካምፖችና የሌሊት ጸሎቶች</span></figcaption></figure>
+      <figure><img src="images/screen-8.webp" width="540" height="960" loading="lazy" alt="A directory of churches"><figcaption><span data-lang="en">A church, wherever you are</span><span data-lang="am">ቤተ ክርስቲያን፣ የትም ቢሆኑ</span></figcaption></figure>
+    </div>
+    <div class="wrap" style="margin-top:26px">
+      <div class="grid cols-3">
+        <div class="card">
+          <h3><span data-lang="en">Works with no internet</span><span data-lang="am">ያለ ኢንተርኔት ይሠራል</span></h3>
+          <p><span data-lang="en">The Bible is on the phone itself. On a bus, in a village, on a dead network — it opens.</span><span data-lang="am">መጽሐፍ ቅዱስ በስልኩ ላይ ነው። በአውቶቡስ፣ በገጠር፣ መስመር በሌለበት — ይከፈታል።</span></p>
+        </div>
+        <div class="card">
+          <h3><span data-lang="en">Amharic that is actually right</span><span data-lang="am">ትክክለኛ አማርኛ</span></h3>
+          <p><span data-lang="en">The 1954 text, corrected verse by verse. Ninety-five verses every other digital copy still gets wrong were repaired by hand.</span><span data-lang="am">የ1954ቱ ቅጂ፣ ቃል በቃል የተስተካከለ። ሌሎች ዲጂታል ቅጂዎች የሳቱአቸው 95 ቃላት በእጅ ተስተካክለዋል።</span></p>
+        </div>
+        <div class="card">
+          <h3><span data-lang="en">Yours stays yours</span><span data-lang="am">የእርስዎ የእርስዎ ሆኖ ይቀራል</span></h3>
+          <p><span data-lang="en">Your notes, bookmarks and prayer list live on your phone. They are not uploaded anywhere.</span><span data-lang="am">ማስታወሻዎችዎ፣ ዕልባቶችዎና የጸሎት ዝርዝርዎ በስልክዎ ላይ ይኖራሉ። የትም አይላኩም።</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="band">
+        <h2><span data-lang="en">Take it with you</span><span data-lang="am">ይዘውት ይሂዱ</span></h2>
+        <p><span data-lang="en">Reading here is good. On the phone you also get the reading plans, your bookmarks and highlights, the prayer list, and all of it without a network.</span><span data-lang="am">እዚህ ማንበብ ጥሩ ነው። በስልክ ላይ ደግሞ የንባብ ዕቅዶቹን፣ ዕልባቶችዎንና ማድመቂያዎችዎን፣ የጸሎት ዝርዝሩን — ሁሉንም ያለ መስመር ያገኛሉ።</span></p>
+        <div class="cta-row">
+          <a class="play-badge" href="https://play.google.com/store/apps/details?id=com.gubae.app"><img src="images/google-play-badge.png" width="646" height="250" alt="Get it on Google Play"></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
 </main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <img class="on-light" src="images/logo-on-light.webp" width="700" height="192" alt="Gubae">
+        <img class="on-dark" src="images/logo-on-dark.webp" width="700" height="192" alt="">
+        <p><span data-lang="en">Your daily companion in faith. Built in Addis Ababa.</span><span data-lang="am">የእምነት አጋርዎ። በአዲስ አበባ የተሠራ።</span></p>
+      </div>
+      <div>
+        <h4><span data-lang="en">Explore</span><span data-lang="am">ያስሱ</span></h4>
+        <ul>
+          <li><a href="bible.html"><span data-lang="en">Bible</span><span data-lang="am">መጽሐፍ ቅዱስ</span></a></li>
+          <li><a href="lyrics.html"><span data-lang="en">Lyrics</span><span data-lang="am">መዝሙሮች</span></a></li>
+          <li><a href="events.html"><span data-lang="en">Events</span><span data-lang="am">ጉባኤዎች</span></a></li>
+        </ul>
+      </div>
+      <div>
+        <h4><span data-lang="en">Get the app</span><span data-lang="am">መተግበሪያው</span></h4>
+        <ul>
+          <li><a href="https://play.google.com/store/apps/details?id=com.gubae.app">Google Play</a></li>
+          <li><a href="https://play.google.com/store/apps/details?id=com.gubae.app"><span data-lang="en">Add an event</span><span data-lang="am">ጉባኤ ያክሉ</span></a></li>
+          <li><a href="https://play.google.com/store/apps/details?id=com.gubae.app"><span data-lang="en">Add lyrics</span><span data-lang="am">ግጥም ያክሉ</span></a></li>
+        </ul>
+      </div>
+      <div>
+        <h4><span data-lang="en">Company</span><span data-lang="am">ድርጅት</span></h4>
+        <ul>
+          <li><a href="mailto:support@getgubae.com"><span data-lang="en">Contact</span><span data-lang="am">ያግኙን</span></a></li>
+          <li><a href="https://t.me/getgubae">Telegram</a></li>
+          <li><a href="https://www.tiktok.com/@gubaeapps">TikTok</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="year">2026</span> Gubae. <span data-lang="en">Built with care by Axumora.</span><span data-lang="am">በAxumora በጥንቃቄ የተሠራ።</span></span>
+      <span>
+        <a href="copyright.html"><span data-lang="en">Copyright</span><span data-lang="am">የቅጂ መብት</span></a> ·
+        <a href="privacy.html"><span data-lang="en">Privacy</span><span data-lang="am">ግላዊነት</span></a> ·
+        <a href="terms.html"><span data-lang="en">Terms</span><span data-lang="am">ውሎች</span></a> ·
+        <a href="delete-account.html"><span data-lang="en">Delete your account</span><span data-lang="am">መለያ ይሰርዙ</span></a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var turner = document.getElementById('turner');
+  var dots = document.getElementById('dots');
+  var cards = document.getElementById('event-cards');
+  var yearEl = document.getElementById('year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  var PLAY = 'https://play.google.com/store/apps/details?id=com.gubae.app';
+  var panels = [];
+  var at = 0, timer = null;
+
+  function isAm() { return document.documentElement.lang === 'am'; }
+  function say(en, am) { return isAm() ? am : en; }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return c === '&' ? '&amp;' : c === '<' ? '&lt;' : c === '>' ? '&gt;' : '&quot;';
+    });
+  }
+
+  var MONTHS_EN = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+                   'August', 'September', 'October', 'November', 'December'];
+  var MONTHS_AM = ['ጃንዩወሪ', 'ፌብሩወሪ', 'ማርች', 'ኤፕሪል', 'ሜይ', 'ጁን', 'ጁላይ',
+                   'ኦገስት', 'ሴፕቴምበር', 'ኦክቶበር', 'ኖቬምበር', 'ዲሴምበር'];
+
+  function pretty(iso) {
+    if (!iso) return '';
+    var p = iso.split('-');
+    var m = (isAm() ? MONTHS_AM : MONTHS_EN)[(+p[1] || 1) - 1];
+    return isAm() ? (m + ' ' + (+p[2]) + '፣ ' + p[0]) : (m + ' ' + (+p[2]) + ', ' + p[0]);
+  }
+
+  // ----------------------------------------------------------- the turner
+
+  function show(i) {
+    at = (i + panels.length) % panels.length;
+    panels.forEach(function (p, n) { p.classList.toggle('on', n === at); });
+    [].forEach.call(dots.children, function (d, n) {
+      d.setAttribute('aria-current', String(n === at));
+    });
+  }
+
+  function drawDots() {
+    dots.innerHTML = '';
+    panels.forEach(function (_, n) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('role', 'tab');
+      b.setAttribute('aria-label', say('Panel ', 'ፓነል ') + (n + 1));
+      b.setAttribute('aria-current', String(n === at));
+      b.addEventListener('click', function () { show(n); restart(); });
+      dots.appendChild(b);
+    });
+    dots.hidden = panels.length < 2;
+  }
+
+  function restart() {
+    clearInterval(timer);
+    if (panels.length > 1) timer = setInterval(function () { show(at + 1); }, 4200);
+  }
+
+  turner.addEventListener('mouseenter', function () { clearInterval(timer); });
+  turner.addEventListener('mouseleave', restart);
+  turner.addEventListener('focusin', function () { clearInterval(timer); });
+
+  var startX = null;
+  turner.addEventListener('touchstart', function (e) {
+    startX = e.touches[0].clientX;
+  }, { passive: true });
+  turner.addEventListener('touchend', function (e) {
+    if (startX === null) return;
+    var dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) > 50) { show(at + (dx < 0 ? 1 : -1)); restart(); }
+    startX = null;
+  }, { passive: true });
+
+  function addPanel(html) {
+    var el = document.createElement('div');
+    el.className = 'panel';
+    el.setAttribute('data-panel', '');
+    el.innerHTML = html;
+    turner.appendChild(el);
+    panels.push(el);
+  }
+
+  // --------------------------------------------------------------- pieces
+
+  function eventPanel(e) {
+    var when = pretty(e.date) +
+      (e.endDate && e.endDate !== e.date ? ' – ' + pretty(e.endDate) : '');
+    return (e.banner ? '<img class="panel-shot" alt="" onerror="this.remove()" src="' + esc(e.banner) + '">' : '') +
+      '<p class="eyebrow">' + say('Coming up', 'በቅርቡ') + '</p>' +
+      '<h3 class="panel-title">' + esc(e.title) + '</h3>' +
+      '<p class="panel-meta">' + esc(when) +
+      (e.location ? '<br>' + esc(e.location) : '') + '</p>' +
+      '<a class="btn btn-primary btn-sm" href="events.html">' +
+      say('See the details', 'ዝርዝሩን ይመልከቱ') + '</a>';
+  }
+
+  function versePanel(v, lang) {
+    var book = lang === 'am' ? v.amBook : v.enBook;
+    return '<p class="eyebrow">' + say('Verse of the day', 'የዕለቱ ቃል') + '</p>' +
+      '<p class="quote" lang="' + lang + '">' + esc(v[lang]) + '</p>' +
+      '<p class="panel-meta">' + esc(book + ' ' + v.chapter + ':' + v.verse) + '</p>' +
+      '<div class="cta-row">' +
+      '<a class="btn btn-primary btn-sm" href="bible.html#/' +
+      v.book + '/' + v.chapter + '/' + v.verse + '">' +
+      say('Read the chapter', 'ምዕራፉን ያንብቡ') + '</a>' +
+      '<button class="btn btn-ghost btn-sm" type="button" data-copy="' +
+      encodeURIComponent('“' + v[lang] + '” — ' + book + ' ' +
+        v.chapter + ':' + v.verse + String.fromCharCode(10) +
+        'https://getgubae.com') + '">' +
+      '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="7.5" width="13" height="14" rx="2.5"/><path d="M7.5 7.5V5A2.5 2.5 0 0 1 10 2.5h9.5A2.5 2.5 0 0 1 22 5v9.5A2.5 2.5 0 0 1 19.5 17H15.5"/></svg><span>' + say('Copy', 'ቅዳ') + '</span></button></div>';
+  }
+
+  // The verse carries its own text, so one listener serves whichever panel
+  // happens to be showing.
+  turner.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-copy]');
+    if (!btn) return;
+    var label = btn.querySelector('span');
+    navigator.clipboard.writeText(decodeURIComponent(btn.getAttribute('data-copy')))
+      .then(function () {
+        label.textContent = say('Copied', 'ተቀድቷል');
+        setTimeout(function () { label.textContent = say('Copy', 'ቅዳ'); }, 1600);
+      })
+      .catch(function () { label.textContent = say('Could not copy', 'መቅዳት አልተቻለም'); });
+  });
+
+  function eventCard(e) {
+    return '<article class="card ev-card">' +
+      (e.banner ? '<img class="shot" alt="" onerror="this.remove()" src="' + esc(e.banner) + '">' : '') +
+      '<div class="body"><span class="ev-when">' + esc(pretty(e.date)) + '</span>' +
+      '<h3>' + esc(e.title) + '</h3>' +
+      (e.location ? '<p class="ev-where">' + esc(e.location) + '</p>' : '') +
+      (e.organizer ? '<p class="ev-where">' + esc(e.organizer) + '</p>' : '') +
+      '</div></article>';
+  }
+
+  function dayOfYear() {
+    var now = new Date();
+    return Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+  }
+
+  Promise.all([
+    new Promise(function (done) { window.gubaeEvents(done); }),
+    fetch('data/daily.json').then(function (r) { return r.json(); }).catch(function () { return null; })
+  ]).then(function (out) {
+    var daily = out[1];
+    var upcoming = out[0].events;
+
+    turner.innerHTML = '';
+    panels = [];
+
+    // The gathering goes first -- it is the thing with a date on it -- and
+    // today's verse follows.
+    upcoming.slice(0, 2).forEach(function (e) { addPanel(eventPanel(e)); });
+
+    if (daily && daily.verses && daily.verses.length) {
+      var v = daily.verses[dayOfYear() % daily.verses.length];
+      addPanel(versePanel(v, isAm() ? 'am' : 'en'));
+    }
+
+    if (!panels.length) {
+      addPanel('<p class="eyebrow">' + say('Gubae', 'ጉባኤ') + '</p>' +
+               '<p class="quote">' + say('The Bible, the songs and the gatherings, in one app.',
+                                         'መጽሐፍ ቅዱስ፣ መዝሙርና ጉባኤዎች በአንድ መተግበሪያ።') + '</p>');
+    }
+
+    show(0);
+    drawDots();
+    restart();
+
+    if (upcoming.length) {
+      cards.innerHTML = upcoming.slice(0, 3).map(eventCard).join('');
+    } else {
+      var section = document.getElementById('events');
+      if (section) section.hidden = true;
+    }
+  });
+
+  // The panels were built in one language, so a switch rebuilds the page
+  // rather than leaving half of it in the other.
+  var built = false;
+  document.addEventListener('gubae:lang', function () {
+    if (built) location.reload();
+    built = true;
+  });
+}());
+</script>
 </body>
 </html>
