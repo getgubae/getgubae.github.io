@@ -1,0 +1,52 @@
+# What a browser is allowed to hold on to, and for how long.
+#
+# This is why the Browse column arrived late and the list showed three
+# columns on the 30th: the server was telling browsers to keep every file
+# for ten minutes without asking, the HTML page included. The stylesheet,
+# the script and the data are all addressed by a hash of their contents, so
+# they can never go stale -- but the page that names those hashes has no
+# hash of its own, and a reader holding yesterday's page gets yesterday's
+# site until the ten minutes run out.
+#
+# So the pages revalidate every time. With an ETag that costs one small
+# 304 and nothing is ever stale. Everything whose address already changes
+# when its contents change may be held for as long as it likes.
+#
+# Read by Cloudflare Pages, which serves getgubae.com. GitHub Pages does
+# not read it and still sends max-age=600; nothing can be done about that
+# from here, and getgubae.com is the address that matters.
+
+/*
+  Cache-Control: public, max-age=0, must-revalidate
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# Addressed by a hash of what is in them: a new one is a new URL.
+/styles.css
+  Cache-Control: public, max-age=604800
+
+/site.js
+  Cache-Control: public, max-age=604800
+
+/data/*
+  Cache-Control: public, max-age=604800
+
+# These change only when they are replaced, and then under a new name.
+/images/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Checked often enough by the crawlers themselves.
+/robots.txt
+  Cache-Control: public, max-age=3600
+
+/sitemap.xml
+  Cache-Control: public, max-age=3600
+
+/sitemap-pages.xml
+  Cache-Control: public, max-age=3600
+
+/sitemap-lyrics.xml
+  Cache-Control: public, max-age=3600
+
+/sitemap-bible.xml
+  Cache-Control: public, max-age=3600
