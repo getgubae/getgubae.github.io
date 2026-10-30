@@ -152,7 +152,7 @@
   }
 
   function fromFile() {
-    return fetch('data/events.json')
+    return fetch('data/events.json?v=67935ae4')
       .then(function (r) { return r.json(); })
       .then(function (d) {
         return {
@@ -166,4 +166,66 @@
   window.gubaeEvents = function (done) {
     fromCdn().catch(fromFile).then(done);
   };
+}());
+
+/* Light or dark.
+ *
+ * Until somebody presses the switch there is no data-theme attribute at all,
+ * and the stylesheet follows whatever the device is set to -- so a phone
+ * that turns dark in the evening takes the site with it. Pressing the switch
+ * fixes a choice, and from then on it is the reader's, not the device's.
+ *
+ * A snippet in each page's <head> applies the remembered choice before the
+ * first paint. This block only has to handle the pressing.
+ */
+(function () {
+  'use strict';
+
+  var KEY = 'gubae.theme';
+  var root = document.documentElement;
+  var media = window.matchMedia('(prefers-color-scheme: dark)');
+
+  function showing() {
+    var set = root.getAttribute('data-theme');
+    if (set === 'light' || set === 'dark') return set;
+    return media.matches ? 'dark' : 'light';
+  }
+
+  function paint() {
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content',
+      showing() === 'dark' ? '#0b0817' : '#fbfaff');
+  }
+
+  var button = document.getElementById('theme-toggle');
+  if (button) {
+    button.addEventListener('click', function () {
+      var next = showing() === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem(KEY, next); } catch (e) { /* nothing to do */ }
+      paint();
+    });
+  }
+
+  // While no choice has been made, keep in step with the device.
+  if (media.addEventListener) media.addEventListener('change', paint);
+  paint();
+}());
+
+/* How tall the header is, for the reading bar that sticks underneath it.
+ * On a phone the header runs to two rows, so 76px is not a safe guess.
+ */
+(function () {
+  'use strict';
+  var head = document.querySelector('.site-head');
+  if (!head) return;
+
+  function measure() {
+    document.documentElement.style.setProperty(
+      '--head-h', head.getBoundingClientRect().height + 'px');
+  }
+  measure();
+  window.addEventListener('resize', measure, { passive: true });
+  if (window.ResizeObserver) new ResizeObserver(measure).observe(head);
+  document.addEventListener('gubae:lang', measure);
 }());

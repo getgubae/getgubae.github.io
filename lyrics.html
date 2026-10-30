@@ -16,7 +16,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;600;700;800&family=Noto+Serif+Ethiopic:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=f9473c2c">
+<script>try{var t=localStorage.getItem("gubae.theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
 </head>
 <body>
 <a class="skip" href="#panel"><span data-lang="en">Skip to the words</span><span data-lang="am">ወደ ግጥሙ ዝለል</span></a>
@@ -25,14 +26,21 @@
   <div class="wrap">
     <a class="brand" href="/"><img class="on-light" src="images/logo-on-light.webp" width="700" height="192" alt="Gubae"><img class="on-dark" src="images/logo-on-dark.webp" width="700" height="192" alt=""></a>
     <nav class="site-nav">
-      <a href="/"><span data-lang="en">Home</span><span data-lang="am">መነሻ</span></a>
-      <a class="hide-sm" href="bible.html"><span data-lang="en">Bible</span><span data-lang="am">መጽሐፍ ቅዱስ</span></a>
-      <a class="hide-sm" href="events.html"><span data-lang="en">Events</span><span data-lang="am">ጉባኤዎች</span></a>
-      <a class="hide-sm" href="https://play.google.com/store/apps/details?id=com.gubae.app"><span data-lang="en">Get the app</span><span data-lang="am">መተግበሪያው</span></a>
-      <select class="lang-select" id="lang-select" aria-label="Language">
-        <option value="am">አማርኛ</option>
-        <option value="en">English</option>
-      </select>
+      <div class="nav-links">
+        <a href="/"><span data-lang="en">Home</span><span data-lang="am">መነሻ</span></a>
+        <a href="bible.html"><span data-lang="en">Bible</span><span data-lang="am">መጽሐፍ ቅዱስ</span></a>
+        <a href="lyrics.html" aria-current="page"><span data-lang="en">Lyrics</span><span data-lang="am">መዝሙሮች</span></a>
+        <a href="events.html"><span data-lang="en">Events</span><span data-lang="am">ጉባኤዎች</span></a>
+        <a href="https://play.google.com/store/apps/details?id=com.gubae.app"><span data-lang="en">Get the app</span><span data-lang="am">መተግበሪያው</span></a>
+      </div>
+      <div class="nav-tools">
+        <button class="theme-toggle" type="button" id="theme-toggle"
+                aria-label="Light or dark" title="Light or dark"><svg class="on-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.3A8.6 8.6 0 0 1 9.7 3.5a8.6 8.6 0 1 0 10.8 10.8Z"/></svg><svg class="on-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7"/></svg></button>
+        <select class="lang-select" id="lang-select" aria-label="Language">
+          <option value="am">አማርኛ</option>
+          <option value="en">English</option>
+        </select>
+      </div>
     </nav>
   </div>
 </header>
@@ -43,9 +51,11 @@
       <button class="btn btn-outline" type="button" id="up" hidden>
         ←&nbsp;<span data-lang="en">Back</span><span data-lang="am">ተመለስ</span>
       </button>
-      <input id="search" type="search" autocomplete="off" style="flex:1 1 260px"
+      <button class="icon-btn" type="button" id="search-open" hidden
+              aria-label="Search" title="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.4 15.4 21 21"/></svg></button>
+      <input id="search" type="search" autocomplete="off"
              placeholder="Search a song, album or singer" aria-label="Search">
-      <span class="seg" role="group" aria-label="Text size">
+      <span class="seg" id="size" role="group" aria-label="Text size">
         <button type="button" id="smaller" aria-label="Smaller text">A−</button>
         <button type="button" id="bigger" aria-label="Larger text">A+</button>
       </span>
@@ -55,6 +65,7 @@
 
 <main class="reader">
   <div class="wrap narrow">
+    <nav class="crumbs" id="crumbs" aria-label="Where you are" hidden></nav>
     <h1 class="chapter-title" id="head">…</h1>
     <p class="chapter-sub" id="sub"></p>
     <div id="panel"></div>
@@ -124,16 +135,21 @@
   }());
 </script>
 
-<script src="site.js"></script>
+<script src="site.js?v=96d2e73a"></script>
 <script>
 (function () {
   'use strict';
 
   var headEl = document.getElementById('head');
+  var crumbsEl = document.getElementById('crumbs');
   var subEl = document.getElementById('sub');
   var panelEl = document.getElementById('panel');
   var searchEl = document.getElementById('search');
   var upEl = document.getElementById('up');
+  var openEl = document.getElementById('search-open');
+  var segEl = document.getElementById('size');
+  var barEl = document.querySelector('.reader-bar');
+  var readerEl = document.querySelector('.reader');
 
   var SHOWN = 300;          // a list this long is already more than anyone reads
   var index = null;
@@ -151,12 +167,78 @@
     });
   }
 
-  function singerName(a) { return isAm() ? a.name : (a.nameEn || a.name); }
+  /* A name has two spellings: the Amharic one and the Latin one. The row is
+   * headed by whichever language is being read, and the other goes under it
+   * in smaller type. Where the two say the same thing -- a name nobody has
+   * written in Amharic yet -- the second line is left off rather than
+   * printing the same words twice.
+   *
+   * Several hundred names were typed with a double space in them. It is in
+   * the database and in the app; here it is simply not drawn. */
+  function tidy(t) { return (t || '').replace(/\s+/g, ' ').trim(); }
+
+  function mainOf(am, en) {
+    am = tidy(am); en = tidy(en);
+    return isAm() ? (am || en) : (en || am);
+  }
+
+  function altOf(am, en) {
+    var other = isAm() ? tidy(en) : tidy(am);
+    if (!other || other.toLowerCase() === mainOf(am, en).toLowerCase()) return '';
+    return other;
+  }
+
+  function row(attrs, kicker, am, en) {
+    var alt = altOf(am, en);
+    return '<button type="button" ' + attrs + '>' +
+      (kicker ? '<span class="ref">' + kicker + '</span>' : '') +
+      '<span class="row-name">' + escape(mainOf(am, en)) + '</span>' +
+      (alt ? '<span class="row-alt">' + escape(alt) + '</span>' : '') +
+      '</button>';
+  }
+
+  /* Which album row a singer's album sits at, so the path can link to it.
+   * An album belongs to one singer, so the singer's number and the album's
+   * name together name exactly one row. */
+  function albumAt(n, name) {
+    if (!name) return -1;
+    for (var k = 0; k < index.albums.length; k++) {
+      if (index.albums[k].a === n && index.albums[k].name === name) return k;
+    }
+    return -1;
+  }
+
+  /* singer / album / song, the last one being where you already are. */
+  function trail(parts) {
+    var html = '';
+    parts.forEach(function (p, k) {
+      if (k) html += '<span class="sep" aria-hidden="true">/</span>';
+      html += p.href
+        ? '<a href="' + p.href + '">' + escape(p.text) + '</a>'
+        : '<span aria-current="page">' + escape(p.text) + '</span>';
+    });
+    crumbsEl.innerHTML = html;
+    crumbsEl.hidden = !parts.length;
+  }
+
+  /* Every view but the hymn has a heading, no path, and the full bar:
+   * the search box open, and the text size beside it. */
+  function plainHead() {
+    crumbsEl.hidden = true;
+    headEl.hidden = false;
+    subEl.hidden = false;
+    readerEl.classList.remove('song-mode');
+    searchEl.hidden = false;
+    openEl.hidden = true;
+    if (segEl.parentNode !== barEl) barEl.appendChild(segEl);
+  }
+
+  function singerName(a) { return mainOf(a.name, a.nameEn); }
 
   function fetchSinger(n) {
     if (loaded[n]) return Promise.resolve(loaded[n]);
     var pad = n < 10 ? '00' + n : n < 100 ? '0' + n : '' + n;
-    return fetch('data/songs/' + pad + '.json')
+    return fetch('data/songs/' + pad + '.json?v=67935ae4')
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function (d) { loaded[n] = d; return d; });
   }
@@ -213,9 +295,8 @@
     subEl.textContent = index.artists.length + say(' singers', ' ዘማሪዎች');
     var html = '';
     ordered(index.artists, singerName).forEach(function (a) {
-      html += '<button type="button" data-a="' + a.n + '">' +
-        '<span class="ref">' + a.count + say(' lyrics', ' መዝሙሮች') + '</span>' +
-        escape(singerName(a)) + '</button>';
+      html += row('data-a="' + a.n + '"',
+                  a.count + say(' lyrics', ' መዝሙሮች'), a.name, a.nameEn);
     });
     rows(html);
   }
@@ -226,13 +307,13 @@
     headEl.textContent = say('Albums', 'አልበሞች');
     subEl.textContent = index.albums.length + say(' albums', ' አልበሞች');
     var html = '';
-    ordered(index.albums, function (al) { return al.name; })
+    ordered(index.albums, function (al) { return mainOf(al.name, al.nameEn); })
         .slice(0, SHOWN).forEach(function (al) {
       var i = index.albums.indexOf(al);
       var a = index.artists[al.a];
-      html += '<button type="button" data-al="' + i + '">' +
-        '<span class="ref">' + escape(singerName(a)) + ' · ' + al.count +
-        say(' lyrics', ' መዝሙሮች') + '</span>' + escape(al.name) + '</button>';
+      html += row('data-al="' + i + '"',
+                  escape(singerName(a)) + ' · ' + al.count +
+                  say(' lyrics', ' መዝሙሮች'), al.name, al.nameEn);
     });
     panelEl.innerHTML = '<div class="results">' + html + '</div>' +
       capped(index.albums.length, Math.min(SHOWN, index.albums.length));
@@ -244,12 +325,11 @@
     headEl.textContent = say('Songs', 'መዝሙሮች');
     subEl.textContent = index.songs.length + say(' lyrics', ' መዝሙሮች');
     var html = '';
-    ordered(index.songs, function (s) { return s.t; })
+    ordered(index.songs, function (s) { return mainOf(s.t, s.tEn); })
         .slice(0, SHOWN).forEach(function (s) {
       var a = index.artists[s.a];
-      html += '<button type="button" data-a="' + s.a + '" data-s="' + s.i + '">' +
-        '<span class="ref">' + escape(singerName(a)) +
-        (s.al ? ' · ' + escape(s.al) : '') + '</span>' + escape(s.t) + '</button>';
+      html += row('data-a="' + s.a + '" data-s="' + s.i + '"',
+                  escape(singerName(a)), s.t, s.tEn);
     });
     panelEl.innerHTML = '<div class="results">' + html + '</div>' +
       capped(index.songs.length, Math.min(SHOWN, index.songs.length));
@@ -261,13 +341,12 @@
     panelEl.innerHTML = '<p class="loading">…</p>';
     fetchSinger(n).then(function (d) {
       if (at.singer !== n) return;
-      headEl.textContent = isAm() ? d.name : (d.nameEn || d.name);
+      headEl.textContent = mainOf(d.name, d.nameEn);
       subEl.textContent = d.songs.length + say(' lyrics', ' መዝሙሮች');
       var html = '';
       d.songs.forEach(function (s, i) {
-        html += '<button type="button" data-a="' + n + '" data-s="' + i + '">' +
-          (s.album ? '<span class="ref">' + escape(s.album) + '</span>' : '') +
-          escape(s.title) + '</button>';
+        html += row('data-a="' + n + '" data-s="' + i + '"', '',
+                    s.title, s.titleEn);
       });
       rows(html);
     }).catch(failed);
@@ -281,14 +360,14 @@
     panelEl.innerHTML = '<p class="loading">…</p>';
     fetchSinger(al.a).then(function (d) {
       if (at.album !== i) return;
-      headEl.textContent = al.name;
-      subEl.textContent = (isAm() ? d.name : (d.nameEn || d.name)) + ' · ' +
+      headEl.textContent = mainOf(al.name, al.nameEn);
+      subEl.textContent = mainOf(d.name, d.nameEn) + ' · ' +
         al.count + say(' lyrics', ' መዝሙሮች');
       var html = '';
       d.songs.forEach(function (s, n) {
         if (s.album !== al.name) return;
-        html += '<button type="button" data-a="' + al.a + '" data-s="' + n + '">' +
-          escape(s.title) + '</button>';
+        html += row('data-a="' + al.a + '" data-s="' + n + '"', '',
+                    s.title, s.titleEn);
       });
       rows(html);
     }).catch(failed);
@@ -302,17 +381,30 @@
       if (at.singer !== n || at.song !== i) return;
       var s = d.songs[i];
       if (!s) return failed();
-      var who = isAm() ? d.name : (d.nameEn || d.name);
-      headEl.textContent = s.title;
-      document.title = s.title + ' — ' + who + ' — Gubae';
-      subEl.textContent = who + (s.album ? ' · ' + s.album : '') +
-        (s.year ? ' · ' + s.year : '');
+      var who = mainOf(d.name, d.nameEn);
+      var what = mainOf(s.title, s.titleEn);
+      var band = mainOf(s.album, s.albumEn);
+      document.title = what + ' — ' + who + ' — Gubae';
+
+      var k = albumAt(n, s.album);
+      var path = [{ text: who, href: '#/a/' + n }];
+      if (k !== -1) path.push({ text: band, href: '#/al/' + k });
+      path.push({ text: what });
+      trail(path);
+      headEl.hidden = true;
+      subEl.hidden = true;
+      readerEl.classList.add('song-mode');
+      searchEl.hidden = true;
+      openEl.hidden = false;
       // A blank line starts a new verse; a single newline is a line break,
       // which the stylesheet keeps, so the words break where they are sung.
       var blocks = s.words.split(/\n{2,}/).filter(function (b) { return b.trim(); });
-      var html = '<div class="song-sheet">' +
-        '<header class="song-head"><h2>' + escape(s.title) + '</h2>' +
-        '<p class="by">' + escape(who) + (s.album ? ' &middot; ' + escape(s.album) : '') +
+      var html = '<div class="song-sheet"><div class="sheet-tools"></div>' +
+        '<header class="song-head"><h1>' + escape(what) + '</h1>' +
+        (altOf(s.title, s.titleEn)
+          ? '<p class="song-alt">' + escape(altOf(s.title, s.titleEn)) + '</p>'
+          : '') +
+        '<p class="by">' + escape(who) + (band ? ' &middot; ' + escape(band) : '') +
         (s.year ? ' &middot; ' + escape(s.year) : '') + '</p></header>' +
         '<div class="song-words">';
       blocks.forEach(function (block) {
@@ -332,6 +424,9 @@
       }
       html += '</div></div>';
       panelEl.innerHTML = html;
+      // The size buttons are moved into the sheet, not copied, so there
+      // is still only one pair of them and one pair of handlers.
+      panelEl.querySelector('.sheet-tools').appendChild(segEl);
       wireCopy(s, who);
       window.scrollTo({ top: 0 });
     }).catch(failed);
@@ -377,17 +472,20 @@
       }
     });
     index.albums.forEach(function (al, i) {
-      if (hits.length < 80 && al.name.toLowerCase().indexOf(term) !== -1) {
+      if (hits.length < 80 &&
+          (al.name + ' ' + (al.nameEn || '')).toLowerCase().indexOf(term) !== -1) {
         hits.push({ k: 'album', al: al, i: i });
       }
     });
     index.songs.forEach(function (s) {
-      n += s.t.toLowerCase().indexOf(term) !== -1 ? 1 : 0;
-      if (hits.length < 80 && s.t.toLowerCase().indexOf(term) !== -1) {
+      var hay = (s.t + ' ' + (s.tEn || '')).toLowerCase();
+      n += hay.indexOf(term) !== -1 ? 1 : 0;
+      if (hits.length < 80 && hay.indexOf(term) !== -1) {
         hits.push({ k: 'song', s: s });
       }
     });
 
+    plainHead();
     upEl.hidden = false;
     headEl.textContent = say('Search', 'ፍለጋ');
     subEl.textContent = hits.length
@@ -397,19 +495,18 @@
     var html = '';
     hits.forEach(function (h) {
       if (h.k === 'singer') {
-        html += '<button type="button" data-a="' + h.a.n + '">' +
-          '<span class="ref">' + say('Singer', 'ዘማሪ') + ' · ' + h.a.count +
-          say(' lyrics', ' መዝሙሮች') + '</span>' + escape(singerName(h.a)) + '</button>';
+        html += row('data-a="' + h.a.n + '"',
+                    say('Singer', 'ዘማሪ') + ' · ' + h.a.count +
+                    say(' lyrics', ' መዝሙሮች'), h.a.name, h.a.nameEn);
       } else if (h.k === 'album') {
-        html += '<button type="button" data-al="' + h.i + '">' +
-          '<span class="ref">' + say('Album', 'አልበም') + ' · ' +
-          escape(singerName(index.artists[h.al.a])) + '</span>' +
-          escape(h.al.name) + '</button>';
+        html += row('data-al="' + h.i + '"',
+                    say('Album', 'አልበም') + ' · ' +
+                    escape(singerName(index.artists[h.al.a])),
+                    h.al.name, h.al.nameEn);
       } else {
-        html += '<button type="button" data-a="' + h.s.a + '" data-s="' + h.s.i + '">' +
-          '<span class="ref">' + escape(singerName(index.artists[h.s.a])) +
-          (h.s.al ? ' · ' + escape(h.s.al) : '') + '</span>' +
-          escape(h.s.t) + '</button>';
+        html += row('data-a="' + h.s.a + '" data-s="' + h.s.i + '"',
+                    escape(singerName(index.artists[h.s.a])),
+                    h.s.t, h.s.tEn);
       }
     });
     rows(html);
@@ -418,6 +515,7 @@
   // -------------------------------------------------------------- routing
 
   function route() {
+    plainHead();
     var h = location.hash;
     var m;
     if ((m = /^#\/a\/(\d+)\/(\d+)/.exec(h))) showSong(+m[1], +m[2]);
@@ -447,6 +545,12 @@
     if (searchEl.value.trim()) { searchEl.value = ''; route(); return; }
     if (at.song !== undefined && at.singer !== undefined) goto('#/a/' + at.singer);
     else goto('#');
+  });
+
+  openEl.addEventListener('click', function () {
+    openEl.hidden = true;
+    searchEl.hidden = false;
+    searchEl.focus();
   });
 
   var typing = null;
@@ -480,7 +584,7 @@
     if (searchEl.value.trim()) runSearch(searchEl.value); else route();
   });
 
-  fetch('data/songs/index.json')
+  fetch('data/songs/index.json?v=67935ae4')
     .then(function (r) { return r.json(); })
     .then(function (d) { index = d; placeholder(); route(); })
     .catch(function () {

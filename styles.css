@@ -155,13 +155,42 @@ p { margin: 0; }
 :root[data-theme="dark"] .on-light { display: none; }
 :root[data-theme="dark"] .on-dark { display: block; }
 
-.site-nav { margin-left: auto; display: flex; align-items: center; gap: 2px; }
+.site-nav { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.nav-links { display: flex; align-items: center; gap: 2px; }
+.nav-tools { display: flex; align-items: center; gap: 6px; }
 .site-nav a {
   padding: 9px 13px; border-radius: var(--r-sm); text-decoration: none;
   color: var(--ink-2); font-weight: 650; font-size: .93rem; white-space: nowrap;
 }
 .site-nav a:hover { color: var(--ink); background: var(--surface-2); }
-@media (max-width: 760px) { .site-nav .hide-sm { display: none; } }
+.site-nav a[aria-current="page"] {
+  color: var(--brand); background: var(--brand-soft);
+}
+
+/* The light/dark switch, built to match the language control beside it. */
+.theme-toggle {
+  display: flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; padding: 0; cursor: pointer;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: var(--surface); color: var(--ink-2);
+  transition: border-color .15s, color .15s;
+}
+.theme-toggle:hover { border-color: var(--brand); color: var(--brand); }
+.theme-toggle:focus-visible {
+  outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft);
+}
+.theme-toggle svg { width: 19px; height: 19px; }
+@media (max-width: 760px) {
+  .site-head .wrap { flex-wrap: wrap; height: auto; padding-block: 10px; row-gap: 8px; }
+  .site-nav { display: contents; }
+  .nav-tools { margin-left: auto; }
+  .nav-links {
+    order: 3; width: 100%; overflow-x: auto; scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-links::-webkit-scrollbar { display: none; }
+  .nav-links a { white-space: nowrap; }
+}
 
 .lang-select {
   font: inherit; font-size: .84rem; font-weight: 750;
@@ -377,7 +406,7 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-
 }
 
 .reader-head {
-  position: sticky; top: 76px; z-index: 30;
+  position: sticky; top: var(--head-h, 76px); z-index: 30;
   background: color-mix(in srgb, var(--bg) 86%, transparent);
   backdrop-filter: saturate(160%) blur(14px);
   border-bottom: 1px solid var(--line);
@@ -385,6 +414,13 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-
 .reader-bar {
   display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
   padding: 11px 0;
+}
+.reader-bar #search { flex: 1 1 260px; }
+
+/* Back and the text size on one row, the search box beneath them. */
+@media (max-width: 560px) {
+  .reader-bar #search { order: 3; flex: 1 1 100%; }
+  .reader-bar .seg { margin-inline-start: auto; }
 }
 .reader-bar select, .reader-bar input {
   font: inherit; font-size: .92rem; font-weight: 600;
@@ -399,6 +435,20 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-
   outline: none; border-color: var(--brand);
   box-shadow: 0 0 0 3px var(--brand-soft);
 }
+
+/* A search box folded down to its icon, for when the words matter more. */
+.icon-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; flex: 0 0 auto; padding: 0; cursor: pointer;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: var(--surface); color: var(--ink-2); box-shadow: var(--shadow-1);
+  transition: border-color .15s, color .15s;
+}
+.icon-btn:hover { border-color: var(--brand); color: var(--brand); }
+.icon-btn:focus-visible {
+  outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft);
+}
+.icon-btn svg { width: 19px; height: 19px; }
 
 .seg {
   display: inline-flex; border: 1px solid var(--line); border-radius: 999px;
@@ -416,6 +466,29 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-
 
 .reader { padding: 40px 0 10px; }
 .reader .wrap.narrow { max-width: 720px; }
+
+/* Where you are, and the way back out. */
+.crumbs {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px;
+  margin-bottom: 26px; padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+  font-size: .95rem; font-weight: 650; color: var(--ink-3);
+}
+.crumbs a {
+  color: var(--ink-2); text-decoration: none;
+  padding: 4px 8px; margin: -4px 0; border-radius: 9px;
+  transition: color .15s, background-color .15s;
+}
+.crumbs a:hover { color: var(--brand); background: var(--brand-soft); }
+.crumbs a:focus-visible {
+  outline: none; color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft);
+}
+.crumbs .sep { opacity: .55; }
+.crumbs [aria-current="page"] { color: var(--ink); padding: 4px 4px; }
+
+/* Reading a hymn: everything above the words is pulled in close. */
+.reader.song-mode { padding-top: 16px; }
+.reader.song-mode .crumbs { margin-bottom: 16px; padding-bottom: 13px; }
 
 .chapter-title {
   font-family: var(--scripture);
@@ -488,6 +561,14 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-
   display: block; font-size: .74rem; font-weight: 800; color: var(--accent);
   letter-spacing: .06em; text-transform: uppercase; margin-bottom: 4px;
 }
+.results .row-name { display: block; }
+.results .row-alt {
+  display: block; margin-top: 3px; font-weight: 500; font-size: .86rem;
+  color: var(--ink-3); letter-spacing: 0; text-transform: none;
+}
+.song-head .song-alt {
+  margin: -2px 0 10px; font-size: .95rem; font-weight: 500; color: var(--ink-3);
+}
 .results mark {
   background: var(--brand-soft); color: inherit;
   border-radius: 4px; padding: 0 2px;
@@ -497,9 +578,16 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-
 
 .song-sheet {
   background: var(--surface); border: 1px solid var(--line);
-  border-radius: var(--r-xl); padding: clamp(28px, 5vw, 60px);
+  border-radius: var(--r-xl); padding: clamp(20px, 3.2vw, 38px);
   box-shadow: var(--shadow-2); position: relative; overflow: hidden;
   text-align: center;
+}
+
+/* A- A+ in the top corner of the sheet. A row of its own rather than a
+ * corner pinned over the title, which a long title would run into. */
+.sheet-tools {
+  display: flex; justify-content: flex-end;
+  margin: -4px -4px 4px 0;
 }
 .song-sheet::before {
   content: ""; position: absolute; inset: 0 0 auto 0; height: 4px;
@@ -507,10 +595,10 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-
 }
 
 /* The title block above the words. */
-.song-head { margin-bottom: 34px; }
-.song-head h2 {
+.song-head { margin-bottom: 20px; }
+.song-head h1 {
   font-family: var(--scripture); font-weight: 600;
-  font-size: clamp(1.5rem, 3.4vw, 2.1rem); line-height: 1.2;
+  font-size: clamp(1.4rem, 3vw, 1.9rem); line-height: 1.2;
   letter-spacing: -.01em;
 }
 .song-head .by {
@@ -520,7 +608,7 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-
 }
 .song-head::after {
   content: ""; display: block; width: 46px; height: 3px; border-radius: 3px;
-  margin: 24px auto 0;
+  margin: 15px auto 0;
   background: linear-gradient(90deg, var(--brand), var(--gold));
 }
 
