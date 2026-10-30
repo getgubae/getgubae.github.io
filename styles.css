@@ -613,6 +613,21 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-
 .all-link a:hover { text-decoration: underline; }
 .bible-tools .all-link { margin: 0; font-size: .88rem; }
 
+/* A singer's hymns, gathered under the album they came from. */
+.album-group + .album-group { margin-top: 26px; }
+.group-head {
+  display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 12px;
+  margin-bottom: 10px; padding-bottom: 7px;
+  border-bottom: 1px solid var(--line);
+  font-size: .98rem; font-weight: 750; color: var(--ink);
+}
+.group-head a { color: var(--brand); text-decoration: none; }
+.group-head a:hover { text-decoration: underline; }
+.group-count {
+  margin-inline-start: auto; font-size: .76rem; font-weight: 700;
+  letter-spacing: .05em; color: var(--ink-3);
+}
+
 /* The alphabet, across the top of the hymns. Ethiopic first, then the
  * names only written in Latin -- the order the alphabet is recited. */
 .az {
