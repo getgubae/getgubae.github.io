@@ -613,6 +613,23 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-
 .all-link a:hover { text-decoration: underline; }
 .bible-tools .all-link { margin: 0; font-size: .88rem; }
 
+/* The alphabet, across the top of the hymns. Ethiopic first, then the
+ * names only written in Latin -- the order the alphabet is recited. */
+.az {
+  display: flex; flex-wrap: wrap; gap: 4px; margin: -4px 0 20px;
+}
+.az a {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 36px; padding: 6px 8px; border-radius: 10px;
+  border: 1px solid var(--line); background: var(--surface);
+  color: var(--ink-2); font-weight: 700; font-size: .92rem;
+  text-decoration: none; transition: border-color .15s, color .15s;
+}
+.az a:hover { border-color: var(--brand); color: var(--brand); }
+.az a[aria-current="true"] {
+  background: var(--brand); border-color: var(--brand); color: var(--brand-ink);
+}
+
 /* ------------------------------------------------------- supporting Gubae */
 
 .give-section { margin-top: 34px; padding: 0; }
@@ -934,6 +951,7 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-
 }
 .rail-list { display: grid; gap: 2px; }
 .rail-list button, .rail-list a {
+  text-decoration: none;
   display: flex; align-items: baseline; gap: 8px; width: 100%;
   text-align: start; font: inherit; cursor: pointer;
   background: none; border: 0; border-radius: 10px; padding: 8px 10px;

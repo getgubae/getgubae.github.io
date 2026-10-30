@@ -229,3 +229,36 @@
   if (window.ResizeObserver) new ResizeObserver(measure).observe(head);
   document.addEventListener('gubae:lang', measure);
 }());
+
+/* A- and A+, wherever a page puts them.
+ *
+ * The hymn pages are written out as plain HTML with no script of their own,
+ * and the size of the words is the one thing a reader adjusts while reading.
+ * One handler here serves all 2,426 of them, and the chosen size is the same
+ * one the Bible reader and the app remember, so it carries across.
+ *
+ * Nothing happens on a page with no such buttons, which is most of them.
+ */
+(function () {
+  'use strict';
+  var seg = document.querySelector('[data-size]');
+  if (!seg) return;
+
+  var size = 1.14;
+  try {
+    var saved = parseFloat(localStorage.getItem('gubae.size'));
+    if (saved) size = saved;
+  } catch (e) { /* no storage; the default is a fine size */ }
+
+  function set(next) {
+    size = Math.min(1.9, Math.max(0.92, next));
+    document.documentElement.style.setProperty('--read-size', size + 'rem');
+    try { localStorage.setItem('gubae.size', size); } catch (e) {}
+  }
+  set(size);
+
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-size]');
+    if (b) set(size + 0.1 * +b.getAttribute('data-size'));
+  });
+}());

@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;600;700;800&family=Noto+Serif+Ethiopic:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=36720bdf">
+<link rel="stylesheet" href="styles.css?v=f4ac5400">
 <script>try{var t=localStorage.getItem("gubae.theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://getgubae.com/lyrics.html#page","url":"https://getgubae.com/lyrics.html","name":"Amharic mezmur lyrics","alternateName":"የመዝሙር ግጥሞች","inLanguage":["am","en"],"isPartOf":{"@id":"https://getgubae.com/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Gubae","item":"https://getgubae.com/"},{"@type":"ListItem","position":2,"name":"Lyrics","item":"https://getgubae.com/lyrics.html"}]}]}</script>
 </head>
@@ -33,7 +33,7 @@
     <nav class="site-nav">
       <div class="nav-links">
         <a href="/"><span data-lang="en">Home</span><span data-lang="am">መነሻ</span></a>
-        <a href="bible/"><span data-lang="en">Bible</span><span data-lang="am">መጽሐፍ ቅዱስ</span></a>
+        <a href="bible.html"><span data-lang="en">Bible</span><span data-lang="am">መጽሐፍ ቅዱስ</span></a>
         <a href="lyrics.html" aria-current="page"><span data-lang="en">Lyrics</span><span data-lang="am">መዝሙሮች</span></a>
         <a href="events.html"><span data-lang="en">Events</span><span data-lang="am">ዝግጅቶች</span></a>
       </div>
@@ -69,9 +69,10 @@
     </div>
 
     <div id="panel">
-      <div class="grid cols-2" id="doors">
+      <div class="grid cols-3" id="doors">
         <a class="card" href="lyrics/"><h3><span data-lang="en">Singers</span><span data-lang="am">ዘማሪዎች</span></h3><p id="n-singers">&nbsp;</p></a>
         <a class="card" href="albums/"><h3><span data-lang="en">Albums</span><span data-lang="am">አልበሞች</span></h3><p id="n-albums">&nbsp;</p></a>
+        <a class="card" href="songs/"><h3><span data-lang="en">Songs</span><span data-lang="am">መዝሙሮች</span></h3><p id="n-songs">&nbsp;</p></a>
       </div>
       <p class="all-link" id="hint"><span data-lang="en">Or search above for a song, an album or a singer.</span><span data-lang="am">ወይም ከላይ መዝሙር፣ አልበም ወይም ዘማሪ ይፈልጉ።</span></p>
     </div>
@@ -90,7 +91,7 @@
       <div>
         <h4><span data-lang="en">Explore</span><span data-lang="am">ያስሱ</span></h4>
         <ul>
-          <li><a href="bible/"><span data-lang="en">Bible</span><span data-lang="am">መጽሐፍ ቅዱስ</span></a></li>
+          <li><a href="bible.html"><span data-lang="en">Bible</span><span data-lang="am">መጽሐፍ ቅዱስ</span></a></li>
           <li><a href="lyrics.html"><span data-lang="en">Lyrics</span><span data-lang="am">መዝሙሮች</span></a></li>
           <li><a href="bible/"><span data-lang="en">All 66 books</span><span data-lang="am">ሁሉም መጻሕፍት</span></a></li>
           <li><a href="lyrics/"><span data-lang="en">Every singer</span><span data-lang="am">ሁሉም ዘማሪዎች</span></a></li>
@@ -126,7 +127,7 @@
     </div>
   </div>
 </footer>
-<script src="site.js?v=58e2a74a"></script>
+<script src="site.js?v=9e63e318"></script>
 <script>
   (function () {
     var y = document.getElementById('year');
@@ -216,7 +217,8 @@
       return true;
     }
 
-    if (h === '#/singers' || h === '#/songs') { location.replace('lyrics/'); return true; }
+    if (h === '#/singers') { location.replace('lyrics/'); return true; }
+    if (h === '#/songs') { location.replace('songs/'); return true; }
     if (h === '#/albums') { location.replace('albums/'); return true; }
     return false;
   }
@@ -297,6 +299,8 @@
       index.artists.length + say(' singers', ' ዘማሪዎች');
     document.getElementById('n-albums').textContent =
       index.albums.length + say(' albums', ' አልበሞች');
+    document.getElementById('n-songs').textContent =
+      index.songs.length + say(' lyrics', ' መዝሙሮች');
     searchEl.placeholder = say('Search a song, album or singer',
                                'መዝሙር፣ አልበም ወይም ዘማሪ ይፈልጉ');
   }

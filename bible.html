@@ -9,7 +9,7 @@
 <meta name="robots" content="noindex, follow">
 <meta name="theme-color" content="#0f0a1e">
 <link rel="icon" href="images/app-icon.webp">
-<link rel="stylesheet" href="styles.css?v=36720bdf">
+<link rel="stylesheet" href="styles.css?v=f4ac5400">
 <script>try{var t=localStorage.getItem("gubae.theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
 </head>
 <body>
@@ -41,6 +41,15 @@
   }
 
   function go() {
+    /* The quick way: the reader was here before and the page wrote down
+     * the finished address, so there is nothing to look up. */
+    if (!location.hash) {
+      try {
+        var been = localStorage.getItem('gubae.placeUrl');
+        if (been) { location.replace(been); return; }
+      } catch (e) { /* no storage; the long way works too */ }
+    }
+
     var want = asked();
     fetch('data/bible/index.json?v=602ec596')
       .then(function (r) { return r.json(); })

@@ -29,6 +29,7 @@
   var resultsEl = document.getElementById('results');
   if (!passageEl || !toolsEl || !bodyEl) return;
 
+  var slug = root.getAttribute('data-slug');
   var index = null;      // the 66 books
   var book = null;       // this book's text, fetched only if it is needed
   var version = 'am';
@@ -45,6 +46,15 @@
       return c === '&' ? '&amp;' : c === '<' ? '&lt;' : c === '>' ? '&gt;' : '&quot;';
     });
   }
+
+  /* Where the reader got to, written down the moment the page opens.
+   *
+   * `place` is the book and chapter, which the app and older links use.
+   * `placeUrl` is the finished address, so pressing Bible in the menu can
+   * go straight there without first fetching the list of books to work out
+   * what a book number is called. */
+  store('gubae.place', order + '/' + chapter);
+  if (slug) store('gubae.placeUrl', 'bible/' + slug + '/' + chapter + '/');
 
   function bookOf(n) {
     for (var i = 0; i < index.books.length; i++) {
