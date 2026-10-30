@@ -37,7 +37,7 @@
     if (h === '#/albums') { location.replace('albums/'); return; }
 
     /* Anything else needs the list to turn a number into a name. */
-    fetch('data/songs/index.json?v=602ec596')
+    fetch('data/songs/index.json?v=d9ed08e7')
       .then(function (r) { return r.json(); })
       .then(function (d) {
         var m = /^#\/a\/(\d+)\/(\d+)/.exec(h);
