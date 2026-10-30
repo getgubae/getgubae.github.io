@@ -238,7 +238,7 @@
   }());
 </script>
 
-<script src="site.js?v=0daeefcd"></script>
+<script src="site.js?v=9467e7d1"></script>
 <script>
 (function () {
   'use strict';
@@ -275,7 +275,7 @@
   function fetchBook(order) {
     if (loaded[order]) return Promise.resolve(loaded[order]);
     var file = 'data/bible/' + (order < 10 ? '0' + order : order)
-             + '.json?v=b9ac91b4';
+             + '.json?v=32d46468';
     return fetch(file).then(function (r) {
       if (!r.ok) throw new Error(r.status);
       return r.json();
@@ -606,7 +606,7 @@
   if (recall('gubae.version') === 'en') version = 'en';
   setVersion(version);
 
-  fetch('data/bible/index.json?v=b9ac91b4')
+  fetch('data/bible/index.json?v=32d46468')
     .then(function (r) { return r.json(); })
     .then(function (d) {
       index = d;
