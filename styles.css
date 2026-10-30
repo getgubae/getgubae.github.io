@@ -588,9 +588,7 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-
 /* ------------------------------------------------------- supporting Gubae */
 
 .give-section { margin-top: 34px; padding: 0; }
-.give-section h2 {
-  font-size: 1.12rem; font-weight: 750; margin-bottom: 8px;
-}
+.give-section h2 { font-size: 1.12rem; font-weight: 750; margin-bottom: 8px; }
 .give-section p { color: var(--ink-2); line-height: 1.75; max-width: 46em; }
 .give-note { font-size: .92rem; }
 .give-section .btn { margin-top: 12px; }
@@ -598,6 +596,7 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-
   display: inline-block; margin-inline-start: 12px;
   font-size: .86rem; color: var(--ink-3);
 }
+.give-rule { border: 0; border-top: 1px solid var(--line); margin: 44px 0 0; }
 
 .give-cards {
   display: grid; gap: 12px; margin-top: 14px;
@@ -608,27 +607,34 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-
   border-radius: var(--r-md); padding: 16px 18px;
   background: var(--surface); box-shadow: var(--shadow-1);
 }
-.give-top {
-  display: flex; flex-wrap: wrap; align-items: baseline;
-  justify-content: space-between; gap: 8px;
-}
-.give-name { font-weight: 750; color: var(--give, var(--brand)); }
-.give-label {
-  font-size: .68rem; letter-spacing: .09em; text-transform: uppercase;
-  font-weight: 750; color: var(--ink-3);
-}
+.give-top { display: flex; align-items: center; gap: 10px; }
+.give-logo { width: 32px; height: 32px; flex: 0 0 auto; object-fit: contain; }
+.give-name { font-weight: 750; color: var(--give, var(--brand)); line-height: 1.25; }
+
 .give-number {
-  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
-  margin-top: 10px;
+  display: flex; align-items: center; gap: 10px; margin-top: 12px;
 }
 .give-number code {
   font-family: inherit; font-size: 1.22rem; font-weight: 750;
-  letter-spacing: .04em; color: var(--ink); user-select: all;
+  letter-spacing: .06em; color: var(--ink); user-select: all;
 }
-.give-copy { padding: 7px 15px; font-size: .84rem; border-radius: 999px; }
+/* The dots are narrower than the digits they stand for, so each card
+ * reserves room for its own number -- one floor for both left a hand's
+ * width of nothing beside the shorter one. */
+.give-number code { display: inline-block; min-width: calc(var(--digits, 13) * .78em); }
+.give-eye { width: 36px; height: 36px; box-shadow: none; }
+.give-eye svg { width: 17px; height: 17px; }
+.give-eye[aria-pressed="true"] { border-color: var(--brand); color: var(--brand); }
+
 .give-holder {
-  margin-top: 6px; font-size: .86rem; font-weight: 650; color: var(--ink-3);
+  margin-top: 8px; font-size: .88rem; font-weight: 700; color: var(--ink-2);
 }
+.give-label {
+  display: block; font-size: .66rem; letter-spacing: .09em;
+  text-transform: uppercase; font-weight: 750; color: var(--ink-3);
+  margin-bottom: 1px;
+}
+.give-copy { margin-top: 14px; padding: 8px 18px; font-size: .86rem; border-radius: 999px; }
 
 .give-verse {
   margin-top: 40px; padding: 20px 24px;
@@ -636,8 +642,7 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-
   background: var(--surface-2);
 }
 .give-verse p {
-  font-family: var(--scripture); font-size: 1.04rem; line-height: 1.8;
-  color: var(--ink);
+  font-family: var(--scripture); font-size: 1.04rem; line-height: 1.8; color: var(--ink);
 }
 .give-verse cite {
   display: block; margin-top: 8px; font-style: normal;
