@@ -171,6 +171,34 @@ p { margin: 0; }
   color: var(--brand); background: var(--brand-soft);
 }
 
+/* The support heart: the one control that is an invitation rather than a
+ * setting, so it carries the gold rather than the grey. */
+.nav-heart { color: var(--gold); border-color: color-mix(in srgb, var(--gold) 45%, var(--line)); }
+.nav-heart:hover { color: var(--gold); border-color: var(--gold); background: color-mix(in srgb, var(--gold) 12%, transparent); }
+.nav-heart svg { width: 17px; height: 17px; }
+
+/* Get the app is the only thing on the page anybody is asked to do, so it
+ * stops pretending to be a navigation link. */
+.site-nav .nav-app {
+  padding: 9px 16px; font-size: .86rem; border-radius: 999px;
+  white-space: nowrap; margin-inline-start: 2px; gap: 7px;
+}
+.nav-app-icon { width: 15px; height: 15px; flex: 0 0 auto; }
+
+/* A phone is the one device where Get the app can be acted on, so it keeps
+ * its place and loses its words. Scoped past `.btn`, which sets display
+ * further down and would otherwise win on source order. */
+@media (max-width: 760px) {
+  .site-nav .nav-app {
+    width: 40px; height: 40px; padding: 0; justify-content: center;
+    margin-inline-start: 0;
+  }
+  .nav-app-text { display: none; }
+  .nav-app-icon { width: 17px; height: 17px; }
+  /* Narrower, so the mark and the controls share one row again. */
+  .site-head .lang-select { font-size: .78rem; padding-inline: 10px 26px; }
+}
+
 /* The light/dark switch, built to match the language control beside it. */
 .theme-toggle {
   display: flex; align-items: center; justify-content: center;
