@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;600;700;800&family=Noto+Serif+Ethiopic:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=f9473c2c">
+<link rel="stylesheet" href="styles.css?v=a888a4c8">
 <script>try{var t=localStorage.getItem("gubae.theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
 </head>
 <body>
@@ -30,10 +30,12 @@
         <a href="/"><span data-lang="en">Home</span><span data-lang="am">መነሻ</span></a>
         <a href="bible.html"><span data-lang="en">Bible</span><span data-lang="am">መጽሐፍ ቅዱስ</span></a>
         <a href="lyrics.html" aria-current="page"><span data-lang="en">Lyrics</span><span data-lang="am">መዝሙሮች</span></a>
-        <a href="events.html"><span data-lang="en">Events</span><span data-lang="am">ጉባኤዎች</span></a>
+        <a href="events.html"><span data-lang="en">Events</span><span data-lang="am">ዝግጅቶች</span></a>
         <a href="https://play.google.com/store/apps/details?id=com.gubae.app"><span data-lang="en">Get the app</span><span data-lang="am">መተግበሪያው</span></a>
       </div>
       <div class="nav-tools">
+        <button class="icon-btn" type="button" id="search-open" hidden
+                aria-label="Search" title="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.4 15.4 21 21"/></svg></button>
         <button class="theme-toggle" type="button" id="theme-toggle"
                 aria-label="Light or dark" title="Light or dark"><svg class="on-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.3A8.6 8.6 0 0 1 9.7 3.5a8.6 8.6 0 1 0 10.8 10.8Z"/></svg><svg class="on-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7"/></svg></button>
         <select class="lang-select" id="lang-select" aria-label="Language">
@@ -45,14 +47,12 @@
   </div>
 </header>
 
-<div class="reader-head">
+<div class="reader-head lyrics-head">
   <div class="wrap">
     <div class="reader-bar">
       <button class="btn btn-outline" type="button" id="up" hidden>
         ←&nbsp;<span data-lang="en">Back</span><span data-lang="am">ተመለስ</span>
       </button>
-      <button class="icon-btn" type="button" id="search-open" hidden
-              aria-label="Search" title="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.4 15.4 21 21"/></svg></button>
       <input id="search" type="search" autocomplete="off"
              placeholder="Search a song, album or singer" aria-label="Search">
       <span class="seg" id="size" role="group" aria-label="Text size">
@@ -66,21 +66,12 @@
 <main class="reader">
   <div class="wrap narrow">
     <nav class="crumbs" id="crumbs" aria-label="Where you are" hidden></nav>
-    <h1 class="chapter-title" id="head">…</h1>
-    <p class="chapter-sub" id="sub"></p>
+    <div class="page-head" id="page-head">
+      <h1 class="chapter-title" id="head">…</h1>
+      <p class="chapter-sub" id="sub"></p>
+    </div>
     <div id="panel"></div>
 
-    <aside class="reader-foot">
-      <img src="images/app-icon.webp" width="44" height="44" alt="">
-      <div>
-        <strong><span data-lang="en">Sing along, offline</span><span data-lang="am">ያለ መስመር አብረው ይዘምሩ</span></strong>
-        <p>
-          <span data-lang="en">In the app the words scroll by themselves, stay on your phone with no network, and you can keep your favourites.</span>
-          <span data-lang="am">በመተግበሪያው ውስጥ ግጥሙ ራሱ ይንቀሳቀሳል፣ ያለ መስመር በስልክዎ ይቀመጣል፣ የወደዱትንም ማስቀመጥ ይችላሉ።</span>
-        </p>
-      </div>
-      <a class="play-badge" href="https://play.google.com/store/apps/details?id=com.gubae.app"><img src="images/google-play-badge.png" width="646" height="250" alt="Get it on Google Play"></a>
-    </aside>
   </div>
 </main>
 
@@ -90,21 +81,23 @@
       <div class="foot-brand">
         <img class="on-light" src="images/logo-on-light.webp" width="700" height="192" alt="Gubae">
         <img class="on-dark" src="images/logo-on-dark.webp" width="700" height="192" alt="">
-        <p><span data-lang="en">Your daily companion in faith. Built in Addis Ababa.</span><span data-lang="am">የእምነት አጋርዎ። በአዲስ አበባ የተሠራ።</span></p>
+        <p><span data-lang="en">Your daily companion in faith.</span><span data-lang="am">የእምነት አጋርዎ።</span></p>
+        <a class="play-badge foot-badge"
+           href="https://play.google.com/store/apps/details?id=com.gubae.app"><img src="images/google-play-badge.png" width="646" height="250" alt="Get it on Google Play"></a>
       </div>
       <div>
         <h4><span data-lang="en">Explore</span><span data-lang="am">ያስሱ</span></h4>
         <ul>
           <li><a href="bible.html"><span data-lang="en">Bible</span><span data-lang="am">መጽሐፍ ቅዱስ</span></a></li>
           <li><a href="lyrics.html"><span data-lang="en">Lyrics</span><span data-lang="am">መዝሙሮች</span></a></li>
-          <li><a href="events.html"><span data-lang="en">Events</span><span data-lang="am">ጉባኤዎች</span></a></li>
+          <li><a href="events.html"><span data-lang="en">Events</span><span data-lang="am">ዝግጅቶች</span></a></li>
         </ul>
       </div>
       <div>
         <h4><span data-lang="en">Get the app</span><span data-lang="am">መተግበሪያው</span></h4>
         <ul>
           <li><a href="https://play.google.com/store/apps/details?id=com.gubae.app">Google Play</a></li>
-          <li><a href="https://play.google.com/store/apps/details?id=com.gubae.app"><span data-lang="en">Add an event</span><span data-lang="am">ጉባኤ ያክሉ</span></a></li>
+          <li><a href="https://play.google.com/store/apps/details?id=com.gubae.app"><span data-lang="en">Add an event</span><span data-lang="am">ዝግጅት ያክሉ</span></a></li>
           <li><a href="https://play.google.com/store/apps/details?id=com.gubae.app"><span data-lang="en">Add lyrics</span><span data-lang="am">ግጥም ያክሉ</span></a></li>
         </ul>
       </div>
@@ -118,7 +111,7 @@
       </div>
     </div>
     <div class="foot-bottom">
-      <span>© <span id="year">2026</span> Gubae. <span data-lang="en">Built with care by Axumora.</span><span data-lang="am">በAxumora በጥንቃቄ የተሠራ።</span></span>
+      <span>© <span id="year">2026</span> Gubae. <span data-lang="en">Built with care by <a class="maker" href="mailto:support@getgubae.com" title="support@getgubae.com">Axumora</a>.</span><span data-lang="am">በ<a class="maker" href="mailto:support@getgubae.com" title="support@getgubae.com">Axumora</a> በጥንቃቄ የተሠራ።</span></span>
       <span>
         <a href="copyright.html"><span data-lang="en">Copyright</span><span data-lang="am">የቅጂ መብት</span></a> ·
         <a href="privacy.html"><span data-lang="en">Privacy</span><span data-lang="am">ግላዊነት</span></a> &middot;
@@ -135,7 +128,7 @@
   }());
 </script>
 
-<script src="site.js?v=96d2e73a"></script>
+<script src="site.js?v=0daeefcd"></script>
 <script>
 (function () {
   'use strict';
@@ -149,7 +142,9 @@
   var openEl = document.getElementById('search-open');
   var segEl = document.getElementById('size');
   var barEl = document.querySelector('.reader-bar');
+  var headBarEl = document.querySelector('.reader-head');
   var readerEl = document.querySelector('.reader');
+  var pageHeadEl = document.getElementById('page-head');
 
   var SHOWN = 300;          // a list this long is already more than anyone reads
   var index = null;
@@ -208,9 +203,15 @@
     return -1;
   }
 
-  /* singer / album / song, the last one being where you already are. */
-  function trail(parts) {
-    var html = '';
+  /* singer / album / song, the last one being where you already are.
+   * `back` puts an arrow in front of it: the way out sits where you
+   * are already looking, so no row of its own is needed. */
+  function trail(parts, back) {
+    var label = say('Back', 'ተመለስ');
+    var html = back
+      ? '<a class="crumb-back" href="' + back + '" aria-label="' +
+        label + '" title="' + label + '">\u2190</a>'
+      : '';
     parts.forEach(function (p, k) {
       if (k) html += '<span class="sep" aria-hidden="true">/</span>';
       html += p.href
@@ -228,9 +229,16 @@
     headEl.hidden = false;
     subEl.hidden = false;
     readerEl.classList.remove('song-mode');
+    readerEl.classList.add('list-mode');
+    pageHeadEl.hidden = false;
+    headBarEl.hidden = false;
     searchEl.hidden = false;
     openEl.hidden = true;
+    // Back belongs beside the name of the page, not on a row of its own.
+    if (upEl.parentNode !== pageHeadEl) pageHeadEl.insertBefore(upEl, pageHeadEl.firstChild);
+    // A- A+ sets the size of a hymn's words. A list has none.
     if (segEl.parentNode !== barEl) barEl.appendChild(segEl);
+    segEl.hidden = true;
   }
 
   function singerName(a) { return mainOf(a.name, a.nameEn); }
@@ -238,12 +246,39 @@
   function fetchSinger(n) {
     if (loaded[n]) return Promise.resolve(loaded[n]);
     var pad = n < 10 ? '00' + n : n < 100 ? '0' + n : '' + n;
-    return fetch('data/songs/' + pad + '.json?v=67935ae4')
+    return fetch('data/songs/' + pad + '.json?v=b9ac91b4')
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function (d) { loaded[n] = d; return d; });
   }
 
-  function rows(html) { panelEl.innerHTML = '<div class="results">' + html + '</div>'; }
+  /* The three lists, beside whichever one is open. A singer's page counts
+   * as being among the singers, an album's among the albums, so the mark
+   * says where you came from as well as where you are. */
+  function listRail() {
+    var h = location.hash;
+    var now = /^#\/al(bums)?\b/.test(h) ? '#/albums'
+      : /^#\/a\//.test(h) || h === '#/singers' ? '#/singers'
+      : h === '#/songs' ? '#/songs' : '';
+
+    function door(href, text, n) {
+      return '<button type="button" data-go="' + href + '"' +
+        (href === now ? ' aria-current="true"' : '') + '>' + escape(text) +
+        '<span class="rail-count">' + n + '</span></button>';
+    }
+
+    return '<nav class="list-rail" aria-label="' + say('Browse', 'ያስሱ') + '">' +
+      '<h2>' + say('Browse', 'ያስሱ') + '</h2><div class="rail-list">' +
+      door('#/albums', say('Albums', 'አልበሞች'), index.albums.length) +
+      door('#/singers', say('Singers', 'ዘማሪዎች'), index.artists.length) +
+      door('#/songs', say('Lyrics', 'መዝሙሮች'), index.songs.length) +
+      '</div></nav>';
+  }
+
+  function rows(html, note) {
+    panelEl.innerHTML = '<div class="list-layout">' + listRail() +
+      '<div><div class="results">' + html + '</div>' + (note || '') +
+      '</div></div>';
+  }
 
   function capped(total, drawn) {
     if (total <= drawn) return '';
@@ -315,8 +350,7 @@
                   escape(singerName(a)) + ' · ' + al.count +
                   say(' lyrics', ' መዝሙሮች'), al.name, al.nameEn);
     });
-    panelEl.innerHTML = '<div class="results">' + html + '</div>' +
-      capped(index.albums.length, Math.min(SHOWN, index.albums.length));
+    rows(html, capped(index.albums.length, Math.min(SHOWN, index.albums.length)));
   }
 
   function showSongs() {
@@ -331,8 +365,7 @@
       html += row('data-a="' + s.a + '" data-s="' + s.i + '"',
                   escape(singerName(a)), s.t, s.tEn);
     });
-    panelEl.innerHTML = '<div class="results">' + html + '</div>' +
-      capped(index.songs.length, Math.min(SHOWN, index.songs.length));
+    rows(html, capped(index.songs.length, Math.min(SHOWN, index.songs.length)));
   }
 
   function showSinger(n) {
@@ -373,9 +406,101 @@
     }).catch(failed);
   }
 
+
+  /* The columns either side of an open hymn. Both are drawn from the
+   * singer's own file and the index, which are already in hand. */
+  var RAIL = 14;
+
+  function railSongs(n, list, now) {
+    var out = '';
+    list.slice(0, RAIL).forEach(function (it) {
+      out += '<button type="button" data-a="' + n + '" data-s="' + it.j + '"' +
+        (it.j === now ? ' aria-current="true"' : '') + '>' +
+        escape(mainOf(it.s.title, it.s.titleEn)) + '</button>';
+    });
+    return out;
+  }
+
+  function railAlbums(list) {
+    var out = '';
+    list.slice(0, RAIL).forEach(function (it) {
+      out += '<button type="button" data-al="' + it.k + '">' +
+        escape(mainOf(it.al.name, it.al.nameEn)) +
+        '<span class="rail-count">' + it.al.count + '</span></button>';
+    });
+    return out;
+  }
+
+  /* The singers who come after this one, wrapping round at the end. */
+  function railSingers(n) {
+    var out = '';
+    for (var m = 1; m <= RAIL && m < index.artists.length; m++) {
+      var at = (n + m) % index.artists.length;
+      out += '<button type="button" data-a="' + at + '">' +
+        escape(singerName(index.artists[at])) +
+        '<span class="rail-count">' + index.artists[at].count + '</span></button>';
+    }
+    return out;
+  }
+
+  function railBox(side, title, body, more, moreHref) {
+    return '<aside class="song-rail song-rail-' + side + '">' +
+      (title ? '<h2>' + escape(title) + '</h2>' : '') + body +
+      (more ? '<a class="rail-more" href="' + moreHref + '">' +
+        say('See them all', 'ሁሉንም ይዩ') + '</a>' : '') +
+      '</aside>';
+  }
+
+  /* Left: the album this hymn sits in, or failing that the singer's other
+   * hymns. Right: the singer's other albums. */
+  function sides(d, n, i, k) {
+    var s = d.songs[i];
+    var mates = [], rest = [];
+    d.songs.forEach(function (x, j) {
+      if (s.album && x.album === s.album) mates.push({ s: x, j: j });
+      else if (j !== i) rest.push({ s: x, j: j });
+    });
+
+    var left = '';
+    if (mates.length > 1) {
+      left = railBox('left', say('In this album', 'በዚህ አልበም'),
+        '<div class="rail-list">' + railSongs(n, mates, i) + '</div>',
+        mates.length > RAIL && k !== -1, '#/al/' + k);
+    } else if (rest.length) {
+      left = railBox('left', say('More from this singer', 'ከዚህ ዘማሪ ሌላ'),
+        '<div class="rail-list">' + railSongs(n, rest, -1) + '</div>',
+        rest.length > RAIL, '#/a/' + n);
+    } else {
+      // One hymn, one album: nothing of this singer's left to show.
+      left = railBox('left', say('More singers', 'ሌሎች ዘማሪዎች'),
+        '<div class="rail-list">' + railSingers(n) + '</div>',
+        true, '#/singers');
+    }
+
+    var albums = [];
+    for (var m = 0; m < index.albums.length; m++) {
+      if (index.albums[m].a === n && index.albums[m].name !== s.album) {
+        albums.push({ al: index.albums[m], k: m });
+      }
+    }
+    // The badge on its own. The whole invitation card is at the foot of
+    // the page; beside a hymn one button is enough.
+    var badge = '<a class="play-badge rail-app" ' +
+      'href="https://play.google.com/store/apps/details?id=com.gubae.app">' +
+      '<img src="images/google-play-badge.png" width="646" height="250" ' +
+      'alt="' + say('Get it on Google Play', 'በGoogle Play ያግኙት') + '"></a>';
+    var right = railBox('right',
+      albums.length ? say('Other albums', 'ሌሎች አልበሞች') : '',
+      (albums.length ? '<div class="rail-list">' + railAlbums(albums) + '</div>' : '') +
+        badge,
+      false, '');
+
+    return { left: left, right: right };
+  }
+
   function showSong(n, i) {
     at = { singer: n, song: i };
-    upEl.hidden = false;
+    upEl.hidden = true;
     panelEl.innerHTML = '<p class="loading">…</p>';
     fetchSinger(n).then(function (d) {
       if (at.singer !== n || at.song !== i) return;
@@ -390,16 +515,21 @@
       var path = [{ text: who, href: '#/a/' + n }];
       if (k !== -1) path.push({ text: band, href: '#/al/' + k });
       path.push({ text: what });
-      trail(path);
+      trail(path, '#/a/' + n);
       headEl.hidden = true;
       subEl.hidden = true;
+      readerEl.classList.remove('list-mode');
       readerEl.classList.add('song-mode');
-      searchEl.hidden = true;
+      pageHeadEl.hidden = true;
+      segEl.hidden = false;
+      headBarEl.hidden = true;
       openEl.hidden = false;
       // A blank line starts a new verse; a single newline is a line break,
       // which the stylesheet keeps, so the words break where they are sung.
       var blocks = s.words.split(/\n{2,}/).filter(function (b) { return b.trim(); });
-      var html = '<div class="song-sheet"><div class="sheet-tools"></div>' +
+      var side = sides(d, n, i, k);
+      var html = '<div class="song-layout">' + side.left +
+        '<div class="song-sheet"><div class="sheet-tools"></div>' +
         '<header class="song-head"><h1>' + escape(what) + '</h1>' +
         (altOf(s.title, s.titleEn)
           ? '<p class="song-alt">' + escape(altOf(s.title, s.titleEn)) + '</p>'
@@ -422,7 +552,7 @@
           '" rel="noopener" target="_blank">' +
           say('Listen on YouTube', 'በYouTube ያዳምጡ') + '</a>';
       }
-      html += '</div></div>';
+      html += '</div></div>' + side.right + '</div>';
       panelEl.innerHTML = html;
       // The size buttons are moved into the sheet, not copied, so there
       // is still only one pair of them and one pair of handlers.
@@ -532,9 +662,10 @@
   }
 
   panelEl.addEventListener('click', function (e) {
-    var b = e.target.closest('button[data-a], button[data-al]');
+    var b = e.target.closest('button[data-a], button[data-al], button[data-go]');
     if (!b) return;
     searchEl.value = '';
+    if (b.hasAttribute('data-go')) { goto(b.getAttribute('data-go')); return; }
     if (b.hasAttribute('data-al')) { goto('#/al/' + b.getAttribute('data-al')); return; }
     var a = b.getAttribute('data-a'), s = b.getAttribute('data-s');
     goto(s === null ? '#/a/' + a : '#/a/' + a + '/' + s);
@@ -547,8 +678,12 @@
     else goto('#');
   });
 
+  // Search on a hymn: the bar comes back with the box in it. No Back
+  // button -- the arrow in the path is already that.
   openEl.addEventListener('click', function () {
     openEl.hidden = true;
+    headBarEl.hidden = false;
+    upEl.hidden = true;
     searchEl.hidden = false;
     searchEl.focus();
   });
@@ -562,6 +697,17 @@
   window.addEventListener('hashchange', function () {
     if (!searchEl.value.trim()) route();
   });
+
+  /* How tall the path is, so the columns beside the hymn start below it
+   * rather than behind it. One line on a desktop, two on a phone. */
+  function measureCrumbs() {
+    document.documentElement.style.setProperty('--crumb-h',
+      (crumbsEl.hidden ? 0 : crumbsEl.getBoundingClientRect().height) + 'px');
+  }
+  measureCrumbs();
+  if (window.ResizeObserver) new ResizeObserver(measureCrumbs).observe(crumbsEl);
+  window.addEventListener('resize', measureCrumbs, { passive: true });
+  document.addEventListener('gubae:lang', measureCrumbs);
 
   var size = parseFloat(recall('gubae.size')) || 1.14;
   function setSize(next) {
@@ -584,7 +730,7 @@
     if (searchEl.value.trim()) runSearch(searchEl.value); else route();
   });
 
-  fetch('data/songs/index.json?v=67935ae4')
+  fetch('data/songs/index.json?v=b9ac91b4')
     .then(function (r) { return r.json(); })
     .then(function (d) { index = d; placeholder(); route(); })
     .catch(function () {

@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;600;700;800&family=Noto+Serif+Ethiopic:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=f9473c2c">
+<link rel="stylesheet" href="styles.css?v=a888a4c8">
 <script>try{var t=localStorage.getItem("gubae.theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
 </head>
 <body>
@@ -30,7 +30,7 @@
         <a href="/"><span data-lang="en">Home</span><span data-lang="am">መነሻ</span></a>
         <a href="bible.html" aria-current="page"><span data-lang="en">Bible</span><span data-lang="am">መጽሐፍ ቅዱስ</span></a>
         <a href="lyrics.html"><span data-lang="en">Lyrics</span><span data-lang="am">መዝሙሮች</span></a>
-        <a href="events.html"><span data-lang="en">Events</span><span data-lang="am">ጉባኤዎች</span></a>
+        <a href="events.html"><span data-lang="en">Events</span><span data-lang="am">ዝግጅቶች</span></a>
         <a href="https://play.google.com/store/apps/details?id=com.gubae.app"><span data-lang="en">Get the app</span><span data-lang="am">መተግበሪያው</span></a>
       </div>
       <div class="nav-tools">
@@ -45,53 +45,86 @@
   </div>
 </header>
 
-<div class="reader-head">
+<main class="reader bible">
   <div class="wrap">
-    <div class="reader-bar">
-      <select id="book" aria-label="Book"></select>
-      <select id="chapter-pick" aria-label="Chapter"></select>
+    <div class="bible-layout">
 
-      <span class="seg" role="group" aria-label="Version">
-        <button type="button" id="v-am" aria-pressed="true">አማርኛ</button>
-        <button type="button" id="v-en" aria-pressed="false">English</button>
-      </span>
+      <aside class="bible-side bible-passage">
+        <button class="side-toggle" type="button" id="passage-toggle"
+                aria-expanded="false" aria-controls="passage-panel">
+          <span class="side-toggle-label"><span data-lang="en">Choose a passage</span><span data-lang="am">ክፍል ይምረጡ</span></span>
+          <span class="side-toggle-now" id="passage-now">…</span>
+        </button>
 
-      <input id="search" type="search" autocomplete="off"
-             placeholder="Search this book" aria-label="Search this book">
+        <div class="side-panel" id="passage-panel">
+          <div class="testament" role="group" aria-label="Testament">
+            <button type="button" id="t-ot" aria-pressed="true"><span data-lang="en">Old Testament</span><span data-lang="am">ብሉይ ኪዳን</span></button>
+            <button type="button" id="t-nt" aria-pressed="false"><span data-lang="en">New Testament</span><span data-lang="am">አዲስ ኪዳን</span></button>
+          </div>
+          <div class="passage-panes">
+            <div class="book-list" id="book-list"></div>
+            <div class="chapter-col">
+              <h3><span data-lang="en">Chapter</span><span data-lang="am">ምዕራፍ</span></h3>
+              <div class="chapter-nums" id="chapter-nums"></div>
+            </div>
+          </div>
+        </div>
+      </aside>
 
-      <span class="seg" role="group" aria-label="Text size">
-        <button type="button" id="smaller" aria-label="Smaller text">A−</button>
-        <button type="button" id="bigger" aria-label="Larger text">A+</button>
-      </span>
-    </div>
-  </div>
-</div>
+      <aside class="bible-side bible-tools">
+        <div class="tool">
+          <h2><span data-lang="en">Edition</span><span data-lang="am">ቅጂ</span></h2>
+          <span class="seg" role="group" aria-label="Version">
+            <button type="button" id="v-am" aria-pressed="true">አማርኛ</button>
+            <button type="button" id="v-en" aria-pressed="false">English</button>
+          </span>
+        </div>
+        <div class="tool">
+          <h2><span data-lang="en">Text size</span><span data-lang="am">የጽሑፍ መጠን</span></h2>
+          <span class="seg" role="group" aria-label="Text size">
+            <button type="button" id="smaller" aria-label="Smaller text">A−</button>
+            <button type="button" id="bigger" aria-label="Larger text">A+</button>
+          </span>
+        </div>
+        <div class="tool tool-search">
+          <h2><span data-lang="en">Search this book</span><span data-lang="am">በዚህ መጽሐፍ ይፈልጉ</span></h2>
+          <input id="search" type="search" autocomplete="off"
+                 placeholder="Search this book" aria-label="Search this book">
+        </div>
+      </aside>
 
-<main class="reader">
-  <div class="wrap narrow">
-    <h1 class="chapter-title" id="chapter-title">…</h1>
-    <p class="chapter-sub" id="chapter-sub"></p>
+      <div class="bible-main">
+        <nav class="pager pager-top" id="pager-top" hidden>
+      <button class="btn btn-outline" type="button" data-step="-1">←&nbsp;<span data-lang="en">Previous</span><span data-lang="am">ቀዳሚ</span></button>
+      <button class="btn btn-outline" type="button" data-step="1"><span data-lang="en">Next</span><span data-lang="am">ቀጣይ</span>&nbsp;→</button>
+        </nav>
 
-    <div id="results" class="results" hidden></div>
+        <h1 class="chapter-title" id="chapter-title">…</h1>
+        <p class="chapter-sub" id="chapter-sub"></p>
 
-    <div id="chapter" class="verses"></div>
+        <div id="results" class="results" hidden></div>
 
-    <nav class="pager" id="pager" hidden>
-      <button class="btn btn-outline" type="button" id="prev">←&nbsp;<span data-lang="en">Previous</span><span data-lang="am">ቀዳሚ</span></button>
-      <button class="btn btn-outline" type="button" id="next"><span data-lang="en">Next</span><span data-lang="am">ቀጣይ</span>&nbsp;→</button>
-    </nav>
+        <div id="chapter" class="verses"></div>
 
-    <aside class="reader-foot">
-      <img src="images/app-icon.webp" width="44" height="44" alt="">
-      <div>
-        <strong><span data-lang="en">Read it without a network</span><span data-lang="am">ያለ መስመር ያንብቡት</span></strong>
-        <p>
-          <span data-lang="en">In the app the whole Bible sits on your phone, with bookmarks, highlights and your own notes.</span>
-          <span data-lang="am">በመተግበሪያው ውስጥ ሙሉ መጽሐፍ ቅዱስ በስልክዎ ላይ ነው፤ ከዕልባት፣ ከማድመቂያና ከራስዎ ማስታወሻ ጋር።</span>
-        </p>
+        <nav class="pager" id="pager" hidden>
+      <button class="btn btn-outline" type="button" data-step="-1">←&nbsp;<span data-lang="en">Previous</span><span data-lang="am">ቀዳሚ</span></button>
+      <button class="btn btn-outline" type="button" data-step="1"><span data-lang="en">Next</span><span data-lang="am">ቀጣይ</span>&nbsp;→</button>
+        </nav>
+
+        <aside class="reader-foot">
+          <img src="images/app-icon.webp" width="44" height="44" alt="">
+          <div>
+            <strong><span data-lang="en">Read it without a network</span><span data-lang="am">ያለ መስመር ያንብቡት</span></strong>
+            <p>
+              <span data-lang="en">In the app the whole Bible sits on your phone, with bookmarks, highlights and your own notes.</span>
+              <span data-lang="am">በመተግበሪያው ውስጥ ሙሉ መጽሐፍ ቅዱስ በስልክዎ ላይ ነው፤ ከዕልባት፣ ከማድመቂያና ከራስዎ ማስታወሻ ጋር።</span>
+            </p>
+          </div>
+          <a class="play-badge" href="https://play.google.com/store/apps/details?id=com.gubae.app"><img src="images/google-play-badge.png" width="646" height="250" alt="Get it on Google Play"></a>
+        </aside>
       </div>
-      <a class="play-badge" href="https://play.google.com/store/apps/details?id=com.gubae.app"><img src="images/google-play-badge.png" width="646" height="250" alt="Get it on Google Play"></a>
-    </aside>
+
+    </div>
   </div>
 </main>
 
@@ -101,21 +134,23 @@
       <div class="foot-brand">
         <img class="on-light" src="images/logo-on-light.webp" width="700" height="192" alt="Gubae">
         <img class="on-dark" src="images/logo-on-dark.webp" width="700" height="192" alt="">
-        <p><span data-lang="en">Your daily companion in faith. Built in Addis Ababa.</span><span data-lang="am">የእምነት አጋርዎ። በአዲስ አበባ የተሠራ።</span></p>
+        <p><span data-lang="en">Your daily companion in faith.</span><span data-lang="am">የእምነት አጋርዎ።</span></p>
+        <a class="play-badge foot-badge"
+           href="https://play.google.com/store/apps/details?id=com.gubae.app"><img src="images/google-play-badge.png" width="646" height="250" alt="Get it on Google Play"></a>
       </div>
       <div>
         <h4><span data-lang="en">Explore</span><span data-lang="am">ያስሱ</span></h4>
         <ul>
           <li><a href="bible.html"><span data-lang="en">Bible</span><span data-lang="am">መጽሐፍ ቅዱስ</span></a></li>
           <li><a href="lyrics.html"><span data-lang="en">Lyrics</span><span data-lang="am">መዝሙሮች</span></a></li>
-          <li><a href="events.html"><span data-lang="en">Events</span><span data-lang="am">ጉባኤዎች</span></a></li>
+          <li><a href="events.html"><span data-lang="en">Events</span><span data-lang="am">ዝግጅቶች</span></a></li>
         </ul>
       </div>
       <div>
         <h4><span data-lang="en">Get the app</span><span data-lang="am">መተግበሪያው</span></h4>
         <ul>
           <li><a href="https://play.google.com/store/apps/details?id=com.gubae.app">Google Play</a></li>
-          <li><a href="https://play.google.com/store/apps/details?id=com.gubae.app"><span data-lang="en">Add an event</span><span data-lang="am">ጉባኤ ያክሉ</span></a></li>
+          <li><a href="https://play.google.com/store/apps/details?id=com.gubae.app"><span data-lang="en">Add an event</span><span data-lang="am">ዝግጅት ያክሉ</span></a></li>
           <li><a href="https://play.google.com/store/apps/details?id=com.gubae.app"><span data-lang="en">Add lyrics</span><span data-lang="am">ግጥም ያክሉ</span></a></li>
         </ul>
       </div>
@@ -129,7 +164,7 @@
       </div>
     </div>
     <div class="foot-bottom">
-      <span>© <span id="year">2026</span> Gubae. <span data-lang="en">Built with care by Axumora.</span><span data-lang="am">በAxumora በጥንቃቄ የተሠራ።</span></span>
+      <span>© <span id="year">2026</span> Gubae. <span data-lang="en">Built with care by <a class="maker" href="mailto:support@getgubae.com" title="support@getgubae.com">Axumora</a>.</span><span data-lang="am">በ<a class="maker" href="mailto:support@getgubae.com" title="support@getgubae.com">Axumora</a> በጥንቃቄ የተሠራ።</span></span>
       <span>
         <a href="copyright.html"><span data-lang="en">Copyright</span><span data-lang="am">የቅጂ መብት</span></a> ·
         <a href="privacy.html"><span data-lang="en">Privacy</span><span data-lang="am">ግላዊነት</span></a> &middot;
@@ -146,18 +181,22 @@
   }());
 </script>
 
-<script src="site.js?v=96d2e73a"></script>
+<script src="site.js?v=0daeefcd"></script>
 <script>
 (function () {
   'use strict';
 
-  var bookSel = document.getElementById('book');
-  var chapSel = document.getElementById('chapter-pick');
+  var bookListEl = document.getElementById('book-list');
+  var chapterNumsEl = document.getElementById('chapter-nums');
+  var passageEl = document.querySelector('.bible-passage');
+  var toggleEl = document.getElementById('passage-toggle');
+  var nowEl = document.getElementById('passage-now');
   var titleEl = document.getElementById('chapter-title');
   var subEl = document.getElementById('chapter-sub');
   var bodyEl = document.getElementById('chapter');
   var resultsEl = document.getElementById('results');
   var pagerEl = document.getElementById('pager');
+  var pagerTopEl = document.getElementById('pager-top');
   var searchEl = document.getElementById('search');
 
   var index = null;       // the 66 books, their names and chapter counts
@@ -165,6 +204,8 @@
   var loaded = {};        // order -> book, so paging back is instant
   var version = 'am';     // which scripture is shown, not the page language
   var current = { order: 1, chapter: 1, verse: null };
+  var testament = 'ot';   // which half of the picker is showing
+  var picked = 1;         // whose chapters the column is listing
 
   function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
   function recall(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
@@ -177,7 +218,7 @@
   function fetchBook(order) {
     if (loaded[order]) return Promise.resolve(loaded[order]);
     var file = 'data/bible/' + (order < 10 ? '0' + order : order)
-             + '.json?v=67935ae4';
+             + '.json?v=b9ac91b4';
     return fetch(file).then(function (r) {
       if (!r.ok) throw new Error(r.status);
       return r.json();
@@ -186,34 +227,57 @@
 
   // -------------------------------------------------------------- drawing
 
-  function fillBooks() {
-    bookSel.innerHTML = '';
-    [['ot', isAmharic() ? 'ብሉይ ኪዳን' : 'Old Testament'],
-     ['nt', isAmharic() ? 'አዲስ ኪዳን' : 'New Testament']].forEach(function (pair) {
-      var group = document.createElement('optgroup');
-      group.label = pair[1];
-      index.books.filter(function (b) { return b.testament === pair[0]; })
-        .forEach(function (b) {
-          var o = document.createElement('option');
-          o.value = b.order;
-          o.textContent = nameOf(b);
-          group.appendChild(o);
-        });
-      bookSel.appendChild(group);
+  /* The passage picker, as the app draws it: the two testaments as a
+   * toggle, the books with both names and a gold bar against the one the
+   * column is pointed at, and that book's chapters in a column beside them.
+   *
+   * Pressing a book only moves the column. Pressing a chapter is what turns
+   * the page, so you can look through one book while reading another. */
+  function drawPassage() {
+    var html = '';
+    index.books.forEach(function (b) {
+      if (b.testament !== testament) return;
+      html += '<button class="book" type="button" data-order="' + b.order + '"' +
+        (b.order === picked ? ' aria-current="true"' : '') + '>' +
+        '<span class="bar" aria-hidden="true"></span>' +
+        '<span class="book-name">' + escape(isAmharic() ? b.am : b.en) +
+        '<small>' + escape(isAmharic() ? b.en : b.am) + '</small></span></button>';
     });
-    bookSel.value = current.order;
+    bookListEl.innerHTML = html;
+
+    drawChapters();
+
+    document.getElementById('t-ot').setAttribute('aria-pressed', String(testament === 'ot'));
+    document.getElementById('t-nt').setAttribute('aria-pressed', String(testament === 'nt'));
+
+    var here = bookOf(current.order);
+    nowEl.textContent = here
+      ? (isAmharic() ? here.am : here.en) + ' ' + current.chapter : '';
+
+    var at = bookListEl.querySelector('.book[aria-current]');
+    if (at) bookListEl.scrollTop = Math.max(0, at.offsetTop - 60);
   }
 
-  function fillChapters(count) {
-    chapSel.innerHTML = '';
-    var word = isAmharic() ? 'ምዕራፍ ' : 'Chapter ';
-    for (var i = 1; i <= count; i++) {
-      var o = document.createElement('option');
-      o.value = i;
-      o.textContent = word + i;
-      chapSel.appendChild(o);
+  function drawChapters() {
+    var b = bookOf(picked);
+    if (!b) { chapterNumsEl.innerHTML = ''; return; }
+    var reading = picked === current.order;
+    var html = '';
+    for (var i = 1; i <= b.chapters; i++) {
+      html += '<button type="button" data-chapter="' + i + '"' +
+        (reading && i === current.chapter ? ' aria-current="true"' : '') +
+        '>' + i + '</button>';
     }
-    chapSel.value = current.chapter;
+    chapterNumsEl.innerHTML = html;
+    var at = chapterNumsEl.querySelector('button[aria-current]');
+    chapterNumsEl.scrollTop = at ? Math.max(0, at.offsetTop - 60) : 0;
+  }
+
+  function bookOf(order) {
+    for (var i = 0; i < index.books.length; i++) {
+      if (index.books[i].order === order) return index.books[i];
+    }
+    return null;
   }
 
   function chapterOf(n) {
@@ -255,8 +319,8 @@
     }
 
     pagerEl.hidden = false;
-    bookSel.value = current.order;
-    chapSel.value = current.chapter;
+    pagerTopEl.hidden = false;
+    drawPassage();
 
     if (current.verse) {
       var target = document.getElementById('v' + current.verse);
@@ -277,6 +341,7 @@
 
   function go(order, chapter, verse, push) {
     current = { order: +order, chapter: +chapter, verse: verse ? +verse : null };
+    picked = current.order;
     store('gubae.place', current.order + '/' + current.chapter);
     bodyEl.innerHTML = '<p class="loading">…</p>';
     closeSearch();
@@ -284,7 +349,6 @@
     fetchBook(current.order).then(function (b) {
       book = b;
       if (!chapterOf(current.chapter)) current.chapter = b.chapters[0].n;
-      fillChapters(b.chapters.length);
       draw();
       if (push !== false) {
         var hash = '#/' + current.order + '/' + current.chapter +
@@ -378,20 +442,55 @@
 
   // ------------------------------------------------------------------- wiring
 
-  bookSel.addEventListener('change', function () {
+  // A book points the column at it. A chapter is what turns the page.
+  bookListEl.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-order]');
+    if (!b) return;
+    picked = +b.getAttribute('data-order');
+    drawPassage();
+  });
+
+  chapterNumsEl.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-chapter]');
+    if (!b) return;
     searchEl.value = '';
-    go(bookSel.value, 1);
+    go(picked, +b.getAttribute('data-chapter'));
+    shut();
     window.scrollTo({ top: 0 });
   });
 
-  chapSel.addEventListener('change', function () {
-    searchEl.value = '';
-    go(current.order, chapSel.value);
-    window.scrollTo({ top: 0 });
+  function shut() {
+    passageEl.classList.remove('open');
+    toggleEl.setAttribute('aria-expanded', 'false');
+  }
+
+  toggleEl.addEventListener('click', function () {
+    var open = passageEl.classList.toggle('open');
+    toggleEl.setAttribute('aria-expanded', String(open));
+    if (open) drawPassage();
   });
 
-  document.getElementById('prev').addEventListener('click', function () { step(-1); });
-  document.getElementById('next').addEventListener('click', function () { step(1); });
+  ['t-ot', 't-nt'].forEach(function (id) {
+    document.getElementById(id).addEventListener('click', function () {
+      testament = id === 't-ot' ? 'ot' : 'nt';
+      // Point the column at the first book of the half just opened,
+      // rather than leaving it on a book that is no longer in the list.
+      var first = null;
+      for (var k = 0; k < index.books.length && !first; k++) {
+        if (index.books[k].testament === testament) first = index.books[k];
+      }
+      var here = bookOf(current.order);
+      picked = (here && here.testament === testament) ? current.order
+        : (first ? first.order : picked);
+      drawPassage();
+    });
+  });
+
+  // Previous and Next are in two places and do one thing.
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-step]');
+    if (b) step(+b.getAttribute('data-step'));
+  });
 
   document.addEventListener('keydown', function (e) {
     if (e.target.matches('input, select, textarea')) return;
@@ -442,8 +541,7 @@
   document.addEventListener('gubae:lang', function () {
     searchEl.placeholder = isAmharic() ? 'በዚህ መጽሐፍ ውስጥ ይፈልጉ' : 'Search this book';
     if (!index) return;
-    fillBooks();
-    if (book) { fillChapters(book.chapters.length); draw(); }
+    if (book) draw(); else drawPassage();
   });
 
   // --------------------------------------------------------------- start up
@@ -451,12 +549,15 @@
   if (recall('gubae.version') === 'en') version = 'en';
   setVersion(version);
 
-  fetch('data/bible/index.json?v=67935ae4')
+  fetch('data/bible/index.json?v=b9ac91b4')
     .then(function (r) { return r.json(); })
     .then(function (d) {
       index = d;
       current = fromHash();
-      fillBooks();
+      var start = bookOf(current.order);
+      testament = start ? start.testament : 'ot';
+      picked = current.order;
+      drawPassage();
       searchEl.placeholder = isAmharic() ? 'በዚህ መጽሐፍ ውስጥ ይፈልጉ' : 'Search this book';
       go(current.order, current.chapter, current.verse);
     })

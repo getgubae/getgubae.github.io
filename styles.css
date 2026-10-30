@@ -158,6 +158,10 @@ p { margin: 0; }
 .site-nav { margin-left: auto; display: flex; align-items: center; gap: 8px; }
 .nav-links { display: flex; align-items: center; gap: 2px; }
 .nav-tools { display: flex; align-items: center; gap: 6px; }
+/* The search icon sits up here with the other site-wide controls,
+ * so it matches the theme switch rather than the reader bar. */
+.nav-tools .icon-btn { width: 40px; height: 40px; box-shadow: none; }
+.nav-tools .icon-btn svg { width: 18px; height: 18px; }
 .site-nav a {
   padding: 9px 13px; border-radius: var(--r-sm); text-decoration: none;
   color: var(--ink-2); font-weight: 650; font-size: .93rem; white-space: nowrap;
@@ -483,12 +487,28 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-
 .crumbs a:focus-visible {
   outline: none; color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft);
 }
+/* The way back, in front of the path. A round arrow rather than a
+ * word, because the name it points at says where it goes. */
+.crumbs .crumb-back {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 31px; height: 31px; flex: 0 0 auto;
+  margin: -4px 4px -4px 0; padding: 0;
+  border: 1px solid var(--line); border-radius: 999px;
+  font-size: 1rem; line-height: 1; color: var(--ink-2);
+}
+.crumbs .crumb-back:hover { border-color: var(--brand); }
 .crumbs .sep { opacity: .55; }
 .crumbs [aria-current="page"] { color: var(--ink); padding: 4px 4px; }
 
 /* Reading a hymn: everything above the words is pulled in close. */
 .reader.song-mode { padding-top: 16px; }
-.reader.song-mode .crumbs { margin-bottom: 16px; padding-bottom: 13px; }
+/* The way out stays in sight for as long as the hymn is open. */
+.reader.song-mode .crumbs {
+  position: sticky; top: var(--head-h, 76px); z-index: 25;
+  margin-bottom: 16px; padding: 12px 0 11px;
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter: saturate(160%) blur(14px);
+}
 
 .chapter-title {
   font-family: var(--scripture);
@@ -537,6 +557,283 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-
 .reader-foot img { width: 46px; height: 46px; border-radius: var(--r-sm); }
 .reader-foot div { flex: 1 1 240px; }
 .reader-foot p { color: #cfc9e4; font-size: .92rem; margin-top: 4px; }
+
+/* ----------------------------------------------------- the Bible page */
+
+.reader.bible { padding-top: 26px; }
+.reader.bible .wrap { max-width: 1180px; }
+
+/* One column by default: where you are, the tools, then the chapter. */
+.bible-layout { display: flex; flex-direction: column; gap: 18px; }
+.bible-passage { order: 1; }
+.bible-tools { order: 2; }
+.bible-main { order: 3; }
+
+/* --- choosing a passage */
+
+/* On a narrow screen the picker folds shut behind a button that says where
+ * you are. On a wide one the button is not needed and the panel is simply
+ * there. */
+.side-toggle {
+  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  width: 100%; font: inherit; text-align: start; cursor: pointer;
+  padding: 12px 16px; border-radius: var(--r-md);
+  border: 1px solid var(--line); background: var(--surface);
+  box-shadow: var(--shadow-1); color: var(--ink);
+}
+.side-toggle:hover { border-color: var(--brand); }
+.side-toggle-label {
+  font-size: .76rem; letter-spacing: .09em; text-transform: uppercase;
+  font-weight: 750; color: var(--ink-3);
+}
+.side-toggle-now { font-weight: 700; margin-inline-start: auto; }
+
+.side-panel { display: none; margin-top: 10px; }
+.bible-passage.open .side-panel { display: block; }
+
+.testament {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px;
+  border: 1px solid var(--line); border-radius: var(--r-md);
+  background: var(--surface-2); margin-bottom: 10px;
+}
+.testament button {
+  font: inherit; font-size: .86rem; font-weight: 700; cursor: pointer;
+  padding: 10px 8px; border: 0; border-radius: 11px;
+  background: transparent; color: var(--ink-2);
+  transition: background-color .18s, color .18s;
+}
+.testament button[aria-pressed="true"] { background: var(--brand); color: var(--brand-ink); }
+
+/* Books on the left, their chapters in a column on the right, each
+ * scrolling on its own -- the shape the app uses. */
+.passage-panes {
+  display: grid; grid-template-columns: minmax(0, 1fr) 62px;
+  border: 1px solid var(--line); border-radius: var(--r-md);
+  background: var(--surface); overflow: hidden;
+}
+.book-list { display: grid; align-content: start; gap: 1px; padding: 6px; }
+.chapter-col {
+  display: flex; flex-direction: column; min-height: 0;
+  border-inline-start: 1px solid var(--line); background: var(--surface-2);
+}
+.chapter-col h3 {
+  padding: 11px 0 7px; text-align: center;
+  font-size: .62rem; letter-spacing: .14em; text-transform: uppercase;
+  font-weight: 800; color: var(--ink-3);
+}
+.passage-panes > * { min-height: 0; }
+.chapter-nums {
+  display: grid; align-content: start; gap: 1px;
+  flex: 1 1 auto; min-height: 0;
+  padding: 0 6px 6px; overflow-y: auto; scrollbar-width: thin;
+}
+.chapter-nums button {
+  font: inherit; font-size: .84rem; font-weight: 650; cursor: pointer;
+  padding: 7px 0; border: 0; border-radius: 8px;
+  background: none; color: var(--ink-2); text-align: center;
+  transition: background-color .15s, color .15s;
+}
+.chapter-nums button:hover { background: var(--brand-soft); color: var(--brand); }
+.chapter-nums button[aria-current="true"] {
+  background: var(--brand); color: var(--brand-ink);
+}
+.book-list .book {
+  display: flex; align-items: center; gap: 9px; width: 100%;
+  font: inherit; text-align: start; cursor: pointer;
+  padding: 8px 10px; border: 0; border-radius: 11px;
+  background: none; color: var(--ink-2);
+  transition: background-color .15s, color .15s;
+}
+.book-list .book .bar {
+  width: 4px; height: 24px; flex: 0 0 auto; border-radius: 2px;
+  background: transparent;
+}
+.book-list .book .book-name { display: block; font-size: .92rem; font-weight: 600; line-height: 1.25; }
+.book-list .book small {
+  display: block; margin-top: 1px; font-size: .76rem; font-weight: 500;
+  color: var(--ink-3);
+}
+.book-list .book:hover { background: var(--surface-2); color: var(--ink); }
+.book-list .book[aria-current="true"] {
+  background: var(--brand-soft); color: var(--brand);
+}
+.book-list .book[aria-current="true"] .bar { background: var(--gold); }
+.book-list .book[aria-current="true"] small { color: inherit; opacity: .7; }
+
+
+/* --- the tools */
+
+/* Side by side on a narrow screen, stacked when they are a column. */
+.bible-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.bible-tools .tool { display: flex; align-items: center; gap: 8px; }
+.bible-tools .tool-search { flex: 1 1 240px; }
+.bible-tools .tool-search input { flex: 1 1 auto; }
+.bible-tools h2 {
+  font-size: .76rem; letter-spacing: .09em; text-transform: uppercase;
+  font-weight: 750; color: var(--ink-3);
+}
+.bible-tools input {
+  font: inherit; font-size: .92rem; font-weight: 600; width: 100%;
+  padding: 10px 14px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+  box-shadow: var(--shadow-1); transition: border-color .15s, box-shadow .15s;
+}
+.bible-tools input:hover { border-color: var(--brand); }
+.bible-tools input:focus-visible {
+  outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft);
+}
+
+/* --- the chapter, and turning the page */
+
+.bible-main .chapter-title { margin-bottom: 8px; }
+.pager-top { margin: 0 0 20px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+.pager-top .btn { padding: 8px 16px; font-size: .86rem; }
+
+@media (max-width: 1179px) {
+  .passage-panes { height: 62vh; }
+  .book-list { overflow-y: auto; scrollbar-width: thin; }
+  /* Said aloud, not drawn: "Amharic / English" and "A- A+" need no caption,
+   * and the search box has its placeholder. */
+  .bible-tools h2 {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip-path: inset(50%); white-space: nowrap;
+  }
+  .pager-top { margin-bottom: 14px; padding-bottom: 12px; }
+}
+
+@media (min-width: 1180px) {
+  .bible-layout {
+    display: grid; align-items: start; justify-content: center; gap: 22px;
+    grid-template-columns: 262px minmax(0, 640px) 192px;
+  }
+  .bible-passage { order: 1; }
+  .bible-main { order: 2; }
+  .bible-tools { order: 3; }
+
+  /* The button is only a way of opening something that is already open. */
+  .side-toggle { display: none; }
+  .side-panel { display: block; margin-top: 0; }
+  .bible-passage, .bible-tools {
+    position: sticky; top: calc(var(--head-h, 76px) + 20px);
+  }
+  .passage-panes { height: calc(100vh - var(--head-h, 76px) - 150px); }
+  .book-list { overflow-y: auto; scrollbar-width: thin; }
+
+  .bible-tools { display: block; }
+  .bible-tools .tool { display: block; margin-bottom: 18px; }
+  .bible-tools .tool h2 { margin-bottom: 7px; }
+  .bible-tools .seg { width: 100%; }
+  .bible-tools .seg button { flex: 1 1 0; }
+}
+
+/* ------------------------------------------------- a page that is a list */
+
+/* Back, the name and the count on one line. */
+.page-head {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px;
+  margin-bottom: 20px; padding-bottom: 15px;
+  border-bottom: 1px solid var(--line);
+}
+.page-head .chapter-title {
+  font-size: clamp(1.4rem, 2.5vw, 1.9rem); margin-bottom: 0;
+}
+.page-head .chapter-sub { margin-bottom: 0; padding-bottom: 0; border-bottom: 0; }
+.page-head #up {
+  align-self: center; padding: 7px 15px; font-size: .85rem;
+}
+
+/* The search box lines up with the rows rather than with the screen. */
+.lyrics-head .wrap { max-width: 1192px; }
+
+/* The rows take the width in columns instead of a single file down the
+ * middle, and each one is a little shorter. */
+.reader.list-mode .results {
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 9px;
+}
+.reader.list-mode .results button { padding: 11px 34px 11px 15px; }
+.reader.list-mode .results .ref { margin-bottom: 2px; font-size: .72rem; }
+.reader.list-mode .results .row-alt { margin-top: 1px; font-size: .82rem; }
+.reader.list-mode .results button::after { inset-inline-end: 14px; }
+
+.reader.list-mode { padding-top: 26px; }
+.reader.list-mode .wrap.narrow { max-width: 1192px; }
+
+/* The lists, with a way across to the other two beside them. On a narrow
+ * screen the three become a row of chips above the list instead. */
+.list-layout { display: block; }
+.list-rail { margin-bottom: 16px; }
+.list-rail .rail-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.list-rail .rail-list button {
+  width: auto; border: 1px solid var(--line); background: var(--surface);
+}
+
+@media (min-width: 1000px) {
+  .list-layout {
+    display: grid; align-items: start; gap: 22px;
+    grid-template-columns: 196px minmax(0, 1fr);
+  }
+  .list-rail {
+    position: sticky; top: calc(var(--head-h, 76px) + 18px); margin-bottom: 0;
+  }
+  .list-rail .rail-list { display: grid; gap: 2px; }
+  .list-rail .rail-list button { width: 100%; border: 0; background: none; }
+}
+
+/* ------------------------------------ either side of an open hymn */
+
+/* Stacked by default: the hymn, then the album, then the singer. Only on a
+ * screen wide enough to hold all three does it become three columns. */
+.song-layout { display: flex; flex-direction: column; gap: 22px; }
+.song-layout .song-sheet { order: 1; }
+.song-rail-left { order: 2; }
+.song-rail-right { order: 3; }
+
+.song-rail { border-top: 1px solid var(--line); padding-top: 18px; }
+.song-rail h2, .list-rail h2 {
+  font-size: .76rem; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--ink-3); font-weight: 750; margin-bottom: 10px;
+}
+.rail-list { display: grid; gap: 2px; }
+.rail-list button, .rail-list a {
+  display: flex; align-items: baseline; gap: 8px; width: 100%;
+  text-align: start; font: inherit; cursor: pointer;
+  background: none; border: 0; border-radius: 10px; padding: 8px 10px;
+  color: var(--ink-2); font-size: .9rem; font-weight: 600; line-height: 1.35;
+  transition: color .15s, background-color .15s;
+}
+.rail-list button:hover { color: var(--brand); background: var(--brand-soft); }
+.rail-list button:focus-visible {
+  outline: none; color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft);
+}
+.rail-list [aria-current="true"] { color: var(--ink); background: var(--surface-2); }
+.rail-count { margin-inline-start: auto; color: var(--ink-3); font-size: .8rem; }
+.rail-more {
+  display: inline-block; margin-top: 8px; padding: 4px 10px;
+  font-size: .85rem; font-weight: 650; color: var(--brand); text-decoration: none;
+}
+.rail-more:hover { text-decoration: underline; }
+.rail-app { margin-top: 16px; }
+@media (max-width: 1199px) { .rail-app { display: none; } }
+
+@media (min-width: 1200px) {
+  .reader.song-mode .wrap.narrow { max-width: 1192px; }
+  .song-layout {
+    display: grid; align-items: start; justify-content: center; gap: 22px;
+    grid-template-columns: 202px minmax(0, 700px) 202px;
+  }
+  .song-layout .song-sheet { order: 2; }
+  .song-rail-left { order: 1; }
+  .song-rail-right { order: 3; }
+  /* The columns keep pace with the hymn rather than scrolling off it. */
+  .song-rail {
+    position: sticky;
+    top: calc(var(--head-h, 76px) + var(--crumb-h, 56px) + 16px);
+    max-height: calc(100vh - var(--head-h, 76px) - var(--crumb-h, 56px) - 36px);
+    overflow-y: auto; scrollbar-width: thin;
+    border-top: 0; padding-top: 4px;
+  }
+}
 
 /* ------------------------------------------------------------ the lists */
 
@@ -649,6 +946,10 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-
 .play-badge { display: inline-block; line-height: 0; }
 .play-badge img { height: 54px; width: auto; display: block; }
 .play-badge:hover img { filter: brightness(1.08); }
+.foot-badge { margin-top: 18px; }
+.foot-badge img { height: 46px; }
+.maker { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line); }
+.maker:hover { color: var(--brand); text-decoration-color: currentColor; }
 @media (max-width: 480px) { .play-badge img { height: 48px; } }
 
 /* The inline icons take the colour of the text beside them, so one glyph is
