@@ -22,7 +22,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;600;700;800&family=Noto+Serif+Ethiopic:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=96e0e0c0">
+<link rel="stylesheet" href="styles.css?v=36720bdf">
 <script>try{var t=localStorage.getItem("gubae.theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
 <script type="application/ld+json">
 {
@@ -104,7 +104,7 @@
     <nav class="site-nav">
       <div class="nav-links">
         <a href="/" aria-current="page"><span data-lang="en">Home</span><span data-lang="am">መነሻ</span></a>
-        <a href="bible.html"><span data-lang="en">Bible</span><span data-lang="am">መጽሐፍ ቅዱስ</span></a>
+        <a href="bible/"><span data-lang="en">Bible</span><span data-lang="am">መጽሐፍ ቅዱስ</span></a>
         <a href="lyrics.html"><span data-lang="en">Lyrics</span><span data-lang="am">መዝሙሮች</span></a>
         <a href="events.html"><span data-lang="en">Events</span><span data-lang="am">ዝግጅቶች</span></a>
       </div>
@@ -133,7 +133,7 @@
         <p class="meta"><span data-lang="en">In Amharic and English. Free, and it works with no internet.</span><span data-lang="am">በአማርኛና በእንግሊዝኛ። ነፃ፣ ያለ ኢንተርኔትም ይሠራል።</span></p>
         <div class="cta-row">
           <a class="play-badge" href="https://play.google.com/store/apps/details?id=com.gubae.app"><img src="images/google-play-badge.png" width="646" height="250" alt="Get it on Google Play"></a>
-          <a class="btn btn-ghost" href="bible.html"><span data-lang="en">Read the Bible</span><span data-lang="am">መጽሐፍ ቅዱስን ያንብቡ</span></a>
+          <a class="btn btn-ghost" href="bible/"><span data-lang="en">Read the Bible</span><span data-lang="am">መጽሐፍ ቅዱስን ያንብቡ</span></a>
         </div>
       </div>
 
@@ -153,7 +153,7 @@
   <section>
     <div class="wrap">
       <div class="grid cols-3">
-        <a class="card" href="bible.html">
+        <a class="card" href="bible/">
           <div class="tile-icon">✝</div>
           <h3><span data-lang="en">Read the Bible</span><span data-lang="am">መጽሐፍ ቅዱስን ያንብቡ</span></h3>
           <p><span data-lang="en">All 66 books in Amharic and English, with search and a link for every chapter.</span><span data-lang="am">ሁሉም 66 መጻሕፍት በአማርኛና በእንግሊዝኛ፣ ከፍለጋና ከምዕራፍ አገናኝ ጋር።</span></p>
@@ -270,7 +270,7 @@
       <div>
         <h4><span data-lang="en">Explore</span><span data-lang="am">ያስሱ</span></h4>
         <ul>
-          <li><a href="bible.html"><span data-lang="en">Bible</span><span data-lang="am">መጽሐፍ ቅዱስ</span></a></li>
+          <li><a href="bible/"><span data-lang="en">Bible</span><span data-lang="am">መጽሐፍ ቅዱስ</span></a></li>
           <li><a href="lyrics.html"><span data-lang="en">Lyrics</span><span data-lang="am">መዝሙሮች</span></a></li>
           <li><a href="bible/"><span data-lang="en">All 66 books</span><span data-lang="am">ሁሉም መጻሕፍት</span></a></li>
           <li><a href="lyrics/"><span data-lang="en">Every singer</span><span data-lang="am">ሁሉም ዘማሪዎች</span></a></li>
@@ -307,7 +307,7 @@
   </div>
 </footer>
 
-<script src="site.js?v=9467e7d1"></script>
+<script src="site.js?v=58e2a74a"></script>
 <script>
 (function () {
   'use strict';
@@ -456,7 +456,7 @@
 
   Promise.all([
     new Promise(function (done) { window.gubaeEvents(done); }),
-    fetch('data/daily.json?v=32d46468').then(function (r) { return r.json(); }).catch(function () { return null; })
+    fetch('data/daily.json?v=602ec596').then(function (r) { return r.json(); }).catch(function () { return null; })
   ]).then(function (out) {
     var daily = out[1];
     var upcoming = out[0].events;

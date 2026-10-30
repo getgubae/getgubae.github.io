@@ -730,7 +730,7 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-
   border: 1px solid var(--line); border-radius: var(--r-md);
   background: var(--surface); overflow: hidden;
 }
-.book-list { display: grid; align-content: start; gap: 1px; padding: 6px; }
+.book-list { display: grid; align-content: start; gap: 1px; padding: 6px; position: relative; }
 .chapter-col {
   display: flex; flex-direction: column; min-height: 0;
   border-inline-start: 1px solid var(--line); background: var(--surface-2);
@@ -743,17 +743,18 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-
 .passage-panes > * { min-height: 0; }
 .chapter-nums {
   display: grid; align-content: start; gap: 1px;
-  flex: 1 1 auto; min-height: 0;
+  flex: 1 1 auto; min-height: 0; position: relative;
   padding: 0 6px 6px; overflow-y: auto; scrollbar-width: thin;
 }
-.chapter-nums button {
+.chapter-nums > a { text-decoration: none; display: block; }
+.chapter-nums button, .chapter-nums > a {
   font: inherit; font-size: .84rem; font-weight: 650; cursor: pointer;
   padding: 7px 0; border: 0; border-radius: 8px;
   background: none; color: var(--ink-2); text-align: center;
   transition: background-color .15s, color .15s;
 }
-.chapter-nums button:hover { background: var(--brand-soft); color: var(--brand); }
-.chapter-nums button[aria-current="true"] {
+.chapter-nums button:hover, .chapter-nums > a:hover { background: var(--brand-soft); color: var(--brand); }
+.chapter-nums button[aria-current="true"], .chapter-nums > a[aria-current="true"] {
   background: var(--brand); color: var(--brand-ink);
 }
 .book-list .book {
@@ -818,6 +819,22 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-
     clip-path: inset(50%); white-space: nowrap;
   }
   .pager-top { margin-bottom: 14px; padding-bottom: 12px; }
+}
+
+/* A chapter page, on a phone: the picker and the tools both fold, and the
+ * breadcrumb goes -- the picker button directly above it already says
+ * "ኦሪት ዘፍጥረት 1", and saying it three times before the first verse costs a
+ * fifth of the screen. The trail is still in the page's structured data,
+ * which is what a search engine reads it from. */
+@media (max-width: 1179px) {
+  .bible-tools .side-panel { display: none; }
+  .bible-tools.open .side-panel { display: block; margin-top: 10px; }
+  .bible-tools { display: block; }
+  .bible-tools .tool { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .bible-tools .tool h2 { position: static; width: auto; height: auto; clip-path: none; }
+  .bible-tools .tool-search { display: block; }
+  .reader.bible .bible-main > .crumbs { display: none; }
+  .reader.bible .pager-top { margin-top: 2px; }
 }
 
 @media (min-width: 1180px) {
