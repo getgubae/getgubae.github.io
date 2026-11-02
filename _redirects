@@ -1,0 +1,35 @@
+# Pages that have moved. Read by Cloudflare Pages.
+#
+# /songs/<letter>/ indexes the hymns whose titles start with that
+# letter. The LATIN letters, and "#" for the ones titled with a track
+# number, existed only while 162 hymns still carried a transliteration
+# instead of their Amharic title. Those titles are Amharic now, so
+# these buckets are empty and their pages are gone -- correctly.
+#
+# The Ethiopic letter pages are NOT affected: /songs/a/ is አ, not A.
+#
+# These addresses were handed to Google in the sitemap on 31 October,
+# so they are sent on rather than left to answer 404. 301, because
+# those letters are not coming back.
+
+/songs/a-3/  /lyrics.html  301
+/songs/b/  /lyrics.html  301
+/songs/c/  /lyrics.html  301
+/songs/d/  /lyrics.html  301
+/songs/e/  /lyrics.html  301
+/songs/f/  /lyrics.html  301
+/songs/g/  /lyrics.html  301
+/songs/h/  /lyrics.html  301
+/songs/k/  /lyrics.html  301
+/songs/l/  /lyrics.html  301
+/songs/m/  /lyrics.html  301
+/songs/n/  /lyrics.html  301
+/songs/o/  /lyrics.html  301
+/songs/q/  /lyrics.html  301
+/songs/r/  /lyrics.html  301
+/songs/s/  /lyrics.html  301
+/songs/t/  /lyrics.html  301
+/songs/w/  /lyrics.html  301
+/songs/x0023/  /lyrics.html  301
+/songs/y/  /lyrics.html  301
+/songs/z/  /lyrics.html  301
