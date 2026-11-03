@@ -308,7 +308,7 @@
   </div>
 </footer>
 
-<script src="site.js?v=53f2074c"></script>
+<script src="site.js?v=fc7210a6"></script>
 <script>
 (function () {
   'use strict';
@@ -457,7 +457,7 @@
 
   Promise.all([
     new Promise(function (done) { window.gubaeEvents(done); }),
-    fetch('data/daily.json?v=2bcebbb5').then(function (r) { return r.json(); }).catch(function () { return null; })
+    fetch('data/daily.json?v=009fb431').then(function (r) { return r.json(); }).catch(function () { return null; })
   ]).then(function (out) {
     var daily = out[1];
     var upcoming = out[0].events;

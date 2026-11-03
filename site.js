@@ -152,7 +152,7 @@
   }
 
   function fromFile() {
-    return fetch('data/events.json?v=2bcebbb5')
+    return fetch('data/events.json?v=009fb431')
       .then(function (r) { return r.json(); })
       .then(function (d) {
         return {
