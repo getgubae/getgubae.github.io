@@ -33,3 +33,22 @@
 /songs/x0023/  /lyrics.html  301
 /songs/y/  /lyrics.html  301
 /songs/z/  /lyrics.html  301
+
+# A hymn's address is built from its Latin name, and thirteen hymns on
+# ይድነቃቸው ተካ's ኢየሱስ were addressed by a track number until they were
+# given real ones. Each old address goes to the hymn itself rather than
+# to an index: somebody following one of these wanted that hymn.
+
+/lyrics/yidnekachew-teka/1/  /lyrics/yidnekachew-teka/bechegninet-aysemagnim/  301
+/lyrics/yidnekachew-teka/10/  /lyrics/yidnekachew-teka/semeh/  301
+/lyrics/yidnekachew-teka/11/  /lyrics/yidnekachew-teka/wongel-sele-liju/  301
+/lyrics/yidnekachew-teka/12/  /lyrics/yidnekachew-teka/yemedenegeteleh/  301
+/lyrics/yidnekachew-teka/13/  /lyrics/yidnekachew-teka/lela-kal-ale/  301
+/lyrics/yidnekachew-teka/14/  /lyrics/yidnekachew-teka/yekibr-tsedal/  301
+/lyrics/yidnekachew-teka/2/  /lyrics/yidnekachew-teka/yekbre-degash/  301
+/lyrics/yidnekachew-teka/3/  /lyrics/yidnekachew-teka/gin-bante/  301
+/lyrics/yidnekachew-teka/4/  /lyrics/yidnekachew-teka/lawudeleh-hagerun/  301
+/lyrics/yidnekachew-teka/5/  /lyrics/yidnekachew-teka/hulu-yidersal/  301
+/lyrics/yidnekachew-teka/7/  /lyrics/yidnekachew-teka/tamagn-neh/  301
+/lyrics/yidnekachew-teka/8/  /lyrics/yidnekachew-teka/bedemeh-yagete/  301
+/lyrics/yidnekachew-teka/9/  /lyrics/yidnekachew-teka/yegid-tasfelegegnaleh/  301
