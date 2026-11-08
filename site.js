@@ -212,6 +212,43 @@
   paint();
 }());
 
+/* The phone menu.
+ *
+ * On a phone the header is one row now -- the mark, the badge and this
+ * button -- and the light/dark switch and the language picker live behind
+ * it. Nothing is duplicated: the very same two controls serve both widths,
+ * so a choice made in the menu is the choice the wide header shows.
+ */
+(function () {
+  'use strict';
+  var button = document.getElementById('nav-menu');
+  var sheet = document.getElementById('nav-sheet');
+  if (!button || !sheet) return;
+
+  function shut() {
+    sheet.removeAttribute('data-open');
+    button.setAttribute('aria-expanded', 'false');
+  }
+
+  button.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (sheet.hasAttribute('data-open')) { shut(); return; }
+    sheet.setAttribute('data-open', '');
+    button.setAttribute('aria-expanded', 'true');
+  });
+
+  /* A tap anywhere else puts it away -- but not a tap inside it, or the
+   * language picker would shut the menu before it could be used. */
+  document.addEventListener('click', function (e) {
+    if (!sheet.contains(e.target)) shut();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') shut();
+  });
+  /* Widening past the breakpoint would otherwise leave it open and stranded. */
+  window.addEventListener('resize', shut, { passive: true });
+}());
+
 /* How tall the header is, for the reading bar that sticks underneath it.
  * On a phone the header runs to two rows, so 76px is not a safe guess.
  */

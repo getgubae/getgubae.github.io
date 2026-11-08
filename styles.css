@@ -177,27 +177,67 @@ p { margin: 0; }
 .nav-heart:hover { color: var(--gold); border-color: var(--gold); background: color-mix(in srgb, var(--gold) 12%, transparent); }
 .nav-heart svg { width: 17px; height: 17px; }
 
-/* Get the app is the only thing on the page anybody is asked to do, so it
- * stops pretending to be a navigation link. */
+/* Get it on Google Play.
+ *
+ * Google's own artwork, not a word in a purple pill. It is the picture
+ * people already know from every other app site, so it does not have to
+ * argue for itself. The badge may not be redrawn or recoloured, so
+ * everything that makes it catch the eye -- the ring, the lift, the
+ * shadow -- happens around it and never to it. */
 .site-nav .nav-app {
-  padding: 9px 16px; font-size: .86rem; border-radius: 999px;
-  white-space: nowrap; margin-inline-start: 2px; gap: 7px;
+  display: flex; align-items: center; flex: 0 0 auto;
+  padding: 5px 9px; border-radius: 12px; line-height: 0;
+  border: 1px solid color-mix(in srgb, var(--gold) 55%, var(--line));
+  background: var(--surface);
+  box-shadow: 0 2px 10px color-mix(in srgb, var(--gold) 22%, transparent);
+  transition: transform .15s, box-shadow .15s, border-color .15s;
 }
-.nav-app-icon { width: 15px; height: 15px; flex: 0 0 auto; }
+.site-nav .nav-app img { height: 36px; width: auto; display: block; }
+.site-nav .nav-app:hover {
+  transform: translateY(-1px); border-color: var(--gold);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--gold) 38%, transparent);
+}
+.site-nav .nav-app:focus-visible {
+  outline: none; border-color: var(--gold);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 35%, transparent);
+}
+/* The badge is black with a grey keyline, which disappears into a dark
+ * header. It keeps a pale panel of its own there instead. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .site-nav .nav-app { background: #f2f0f8; border-color: color-mix(in srgb, var(--gold) 70%, #f2f0f8); }
+}
+:root[data-theme="dark"] .site-nav .nav-app { background: #f2f0f8; border-color: color-mix(in srgb, var(--gold) 70%, #f2f0f8); }
 
-/* A phone is the one device where Get the app can be acted on, so it keeps
- * its place and loses its words. Scoped past `.btn`, which sets display
- * further down and would otherwise win on source order. */
-@media (max-width: 760px) {
-  .site-nav .nav-app {
-    width: 40px; height: 40px; padding: 0; justify-content: center;
-    margin-inline-start: 0;
-  }
-  .nav-app-text { display: none; }
-  .nav-app-icon { width: 17px; height: 17px; }
-  /* Narrower, so the mark and the controls share one row again. */
-  .site-head .lang-select { font-size: .78rem; padding-inline: 10px 26px; }
+/* The support control, said out loud. An outlined heart on its own reads
+ * as "add to favourites", which is the wrong thing to be asking. Filled,
+ * gold, and with the word beside it, it reads as giving.
+ *
+ * Written as `.site-nav .nav-heart` throughout, because `.icon-btn` sets a
+ * square 44px further down the file and would otherwise win on source
+ * order, leaving the word hanging outside its own pill. */
+.site-nav .nav-heart {
+  width: auto; height: 44px; padding: 0 14px 0 11px; gap: 7px;
+  color: var(--gold);
 }
+.site-nav .nav-heart:hover {
+  color: var(--gold); border-color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 12%, transparent);
+}
+.site-nav .nav-heart svg { width: 17px; height: 17px; }
+.nav-heart-text { font-weight: 700; font-size: .84rem; white-space: nowrap; }
+@media (max-width: 1180px) {
+  .site-nav .nav-heart { width: 44px; padding: 0; }
+  .nav-heart-text { display: none; }
+}
+
+/* The settings, which are a row up here and a menu on a phone. One set of
+ * controls serves both, so #theme-toggle and #lang-select stay unique and
+ * site.js keeps working unchanged. `display: contents` is what lets the
+ * rows disappear at this width. */
+.nav-sheet { display: flex; align-items: center; gap: 6px; }
+.sheet-row { display: contents; }
+.sheet-label, .sheet-links { display: none; }
+.nav-menu { display: none; }
 
 /* The light/dark switch, built to match the language control beside it. */
 .theme-toggle {
@@ -213,15 +253,67 @@ p { margin: 0; }
 }
 .theme-toggle svg { width: 19px; height: 19px; }
 @media (max-width: 760px) {
-  .site-head .wrap { flex-wrap: wrap; height: auto; padding-block: 10px; row-gap: 8px; }
+  .site-head .wrap {
+    position: relative; flex-wrap: wrap; height: auto;
+    padding-block: 10px; row-gap: 8px;
+  }
   .site-nav { display: contents; }
-  .nav-tools { margin-left: auto; }
+  .nav-tools { margin-left: auto; order: 2; gap: 6px; }
+
+  /* Row one is the mark and the one thing worth tapping. Row two is where
+   * the site goes, with the heart pinned to the end of it, so giving stays
+   * in sight even while the names scroll past. The width is set rather
+   * than left to wrap, so the break happens on every phone and not only
+   * on the narrow ones. */
   .nav-links {
-    order: 3; width: 100%; overflow-x: auto; scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
+    order: 3; width: calc(100% - 50px); flex: 0 0 auto;
+    overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
   }
   .nav-links::-webkit-scrollbar { display: none; }
-  .nav-links a { white-space: nowrap; }
+  .nav-links a { white-space: nowrap; padding-inline: 10px; }
+  .site-nav .nav-heart { order: 4; width: 38px; height: 38px; padding: 0; }
+  .site-nav .nav-heart svg { width: 16px; height: 16px; }
+
+  .site-nav .nav-app { padding: 4px 7px; border-radius: 10px; }
+  .site-nav .nav-app img { height: 32px; }
+
+  .nav-menu {
+    display: flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; flex: 0 0 auto; padding: 0; cursor: pointer;
+    border: 1px solid var(--line); border-radius: 999px;
+    background: var(--surface); color: var(--ink-2);
+  }
+  .nav-menu svg { width: 20px; height: 20px; display: block; }
+  .nav-menu-shut { display: none; }
+  .nav-menu[aria-expanded="true"] { border-color: var(--brand); color: var(--brand); }
+  .nav-menu[aria-expanded="true"] .nav-menu-open { display: none; }
+  .nav-menu[aria-expanded="true"] .nav-menu-shut { display: block; }
+
+  /* The panel hangs off the header rather than off the button, so it lines
+   * up with the edge of the page at every width. */
+  .nav-sheet {
+    position: absolute; top: calc(100% + 6px);
+    inset-inline-end: var(--gutter); z-index: 40;
+    display: none; flex-direction: column; align-items: stretch; gap: 2px;
+    min-width: 234px; padding: 8px; border-radius: 14px;
+    border: 1px solid var(--line); background: var(--surface);
+    box-shadow: 0 18px 40px rgba(16, 13, 33, .24);
+  }
+  .nav-sheet[data-open] { display: flex; }
+  .sheet-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 5px 8px;
+  }
+  .sheet-label {
+    display: block; font-weight: 650; font-size: .9rem; color: var(--ink-2);
+  }
+  .sheet-links {
+    display: flex; flex-direction: column; margin-top: 5px;
+    padding-top: 6px; border-top: 1px solid var(--line);
+  }
+  .sheet-links a { padding: 9px 8px; font-size: .9rem; }
+
+  .site-head .lang-select { font-size: .82rem; padding-inline: 12px 28px; }
 }
 
 .lang-select {
