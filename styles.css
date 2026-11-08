@@ -842,6 +842,25 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-
   font-size: .84rem; font-weight: 700; color: var(--ink-3);
 }
 
+/* ---------------------------------------------------------- the About page */
+
+/* A line of text 1,400 pixels wide is not read, it is skimmed and left. The
+ * giving page already settles on 46em for running prose; this follows it.
+ * Scoped to .doc-body, which only this page carries, so the copyright and
+ * terms pages are left exactly as they are. */
+.doc-body p, .doc-body li { max-width: 46em; }
+.doc-body h3 {
+  font-size: 1.02rem; font-weight: 750; margin: 22px 0 4px;
+  color: var(--brand);
+}
+.doc-body h3 + p { margin-top: 0; }
+.about-links { list-style: none; padding: 0; margin: 10px 0 0; }
+.about-links li { padding: 5px 0; color: var(--ink-2); }
+.about-links a { font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.about-links a:hover { color: var(--brand); }
+
+/* ------------------------------------------------------- end the About page */
+
 /* ----------------------------------------------------- the Bible page */
 
 .reader.bible { padding-top: 26px; }
