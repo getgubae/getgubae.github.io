@@ -299,3 +299,93 @@
     if (b) set(size + 0.1 * +b.getAttribute('data-size'));
   });
 }());
+
+
+/* The install banner, at the foot of a phone screen.
+ *
+ * Most people who read a hymn here are on a phone, and the app is the thing
+ * that actually serves them: it holds the Bible and the words offline, where
+ * this site needs a connection every time. So the invitation belongs in front
+ * of them rather than in the footer they never reach.
+ *
+ * **It must never be in the way.** It is only built on a narrow screen, it is
+ * dismissible, and while it is up the page carries enough bottom padding that
+ * it cannot cover the last line of a hymn or the footer. The dismissal lives
+ * in sessionStorage, not localStorage, deliberately: "not now" means this
+ * visit, and somebody who comes back next week is asked once more.
+ *
+ * Built here rather than written into 4,133 pages: it is a control, not
+ * content, and one file is one place to change it.
+ */
+(function () {
+  'use strict';
+
+  var PLAY = 'https://play.google.com/store/apps/details?id=com.gubae.app';
+  var KEY = 'gubae.appbanner.dismissed';
+
+  // A phone, and only a phone. Checked once: a reader who rotates a tablet
+  // past the breakpoint is not worth a resize listener, and the CSS keeps
+  // the banner hidden anyway.
+  if (!window.matchMedia || !window.matchMedia('(max-width: 768px)').matches) return;
+
+  try {
+    if (sessionStorage.getItem(KEY) === '1') return;
+  } catch (e) { /* private window: show it, which is the kinder failure */ }
+
+  function text(en, am) {
+    return '<span data-lang="en">' + en + '</span>' +
+           '<span data-lang="am">' + am + '</span>';
+  }
+
+  var bar = document.createElement('div');
+  bar.className = 'app-banner';
+  bar.setAttribute('role', 'complementary');
+  bar.setAttribute('aria-label', 'Gubae app');
+  bar.innerHTML =
+    '<img class="app-banner-icon" src="/images/app-icon.webp" width="36" height="36" alt="">' +
+    '<p class="app-banner-text">' +
+      text('Gubae App &mdash; Offline Bible &amp; Mezmurs',
+           'ጉባኤ አፕ — ያለ ኢንተርኔት በስልክዎ ይያዙ') +
+    '</p>' +
+    '<a class="app-banner-cta" href="' + PLAY + '" rel="noopener">' +
+      text('Install', 'ጫን') +
+    '</a>' +
+    '<button type="button" class="app-banner-close" aria-label="Close">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+      'stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>' +
+    '</button>';
+
+  bar.querySelector('.app-banner-close').addEventListener('click', function () {
+    try { sessionStorage.setItem(KEY, '1'); } catch (e) { /* nothing to do */ }
+    bar.remove();
+    document.documentElement.removeAttribute('data-app-banner');
+  });
+
+  document.body.appendChild(bar);
+  // The attribute is what the stylesheet uses to make room. Set only when
+  // the banner is really there, so a dismissed one leaves no gap behind.
+  document.documentElement.setAttribute('data-app-banner', 'on');
+}());
+
+/* Every journey to the Play store, counted.
+ *
+ * One listener on the document rather than one per badge: the badges are in
+ * the header, the footer, the hymn rails and the banner above, and a new one
+ * added tomorrow is counted without anybody remembering to wire it.
+ *
+ * Does nothing at all until a measurement id is configured; see
+ * build_analytics.py.
+ */
+(function () {
+  'use strict';
+
+  document.addEventListener('click', function (e) {
+    var link = e.target.closest && e.target.closest('a[href*="play.google.com"]');
+    if (!link) return;
+    if (typeof window.gtag !== 'function') return;
+    window.gtag('event', 'click_play_store', {
+      event_category: 'app_download',
+      link_url: link.href
+    });
+  }, true);
+}());
