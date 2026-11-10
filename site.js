@@ -344,8 +344,8 @@
   bar.innerHTML =
     '<img class="app-banner-icon" src="/images/app-icon.webp" width="36" height="36" alt="">' +
     '<p class="app-banner-text">' +
-      text('Gubae App &mdash; Offline Bible &amp; Mezmurs',
-           'ጉባኤ አፕ — ያለ ኢንተርኔት በስልክዎ ይያዙ') +
+      text('Gubae on your phone &mdash; free, no internet needed',
+           'ጉባኤ አፕ — ያለ ኢንተርኔት በስልክዎ ያውርዱ') +
     '</p>' +
     '<a class="app-banner-cta" href="' + PLAY + '" rel="noopener">' +
       text('Install', 'ጫን') +
