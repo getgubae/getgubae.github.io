@@ -16,10 +16,17 @@
 # not read it and still sends max-age=600; nothing can be done about that
 # from here, and getgubae.com is the address that matters.
 
+# Security, added 2026-11-13: always HTTPS for a year; no other site may
+# show these pages inside a frame (clickjacking); and the pages never ask
+# for the camera, microphone, location or payment, so the browser refuses
+# them to anything that tries, ads included.
 /*
   Cache-Control: public, max-age=0, must-revalidate
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
 
 # Addressed by a hash of what is in them: a new one is a new URL.
 /styles.css
